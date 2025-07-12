@@ -36,11 +36,14 @@ export type Product = {
     description: string;
     price: number;
     discountPercentage: number;
-    rating: number;
+    rating: {
+        rate: number;
+        count: number;
+    };
     stock: number;
     brand: string;
     category: string;
     thumbnail: string;
-    images: string[];
+    image: string;
 }
 
