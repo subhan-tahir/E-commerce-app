@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Product } from '@/app/types';
+import { useSearchParams } from 'next/navigation';
 
 const API_BASE_URL = 'https://fakestoreapi.com';
 
@@ -46,5 +47,34 @@ export const api = {
       console.error('Error fetching product:', error);
       throw new Error('Failed to fetch product');
     }
+  },
+createUser: async (user: any) => {
+    try {
+    const response = await axios.post(`/api/auth/register`, user);
+
+      return response.data;
+    } catch (error) {
+      console.error('Error creating user:', error);
+      throw new Error('Failed to create user');
+    }
+  },
+  loginUser:async (credentials: { email: string; password: string }) => {
+    try {
+      const response = await axios.post(`/api/auth/login`, credentials);
+      return response.data;
+    } catch (error) {
+      console.error('Error logging in user:', error);
+      throw new Error('Failed to log in user');
+    }
+  },
+  verifyEmail: async (email: string, code: string) => {
+    try {
+      const response = await axios.post(`/api/auth/verify-email`, { email, code });
+      return response.data;
+    } catch (error) {
+      console.error('Error verifying email:', error);
+      throw new Error('Failed to verify email');
+    }
   }
+
 }; 

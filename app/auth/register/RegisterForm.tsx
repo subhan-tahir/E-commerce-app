@@ -19,27 +19,67 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { routes } from "@/app/lib/routes";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { api } from "@/app/lib/api";
+import { useEffect, useState } from "react";
+import ErrorMessage from "@/components/messages/ErrorMessage";
+import { useSearchParams } from "next/navigation";
 
 export default function RegisterForm() {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email');
+  console.log("email", email);
   const form = useForm<RegisterFormTypes>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
       username: "",
-      email: "",
+      email: email || "",
       password: "",
       confirmPassword: "",
       remember: false,
     },
   });
   const remember = form.watch("remember");
-console.log(process.env.MongoDB_URL);
-  const  onSubmit = async (data: RegisterFormTypes) => {
-    const response = await axios.post("/api/auth/register", data);
-    console.log('response...',response);
+  console.log(process.env.MongoDB_URL);
+  const onSubmit = async (data: RegisterFormTypes) => {
+    try {
+      setLoading(true)
+      const response = await api.createUser(data);
+      if (response?.success) {
+        toast.success("Registration successful");
+        form.reset();
+        navigate.push(`${routes.verifyEmail}?email=${encodeURIComponent(data.email)}`);
+      }
+      else if (response?.status === 400) {
+        console.log('running')
+        setErrorMessage(response.message || "User already exist");
+      }
+      else {
+        toast.error(response.message || "Registration failed");
+      }
+    } catch (error: any) {
+
+      console.log('Register error:', error.response);
+      toast.error("Something went wrong. Please try again.");
+    }
+    finally {
+      setLoading(false);
+    }
   };
+
+
+
+
 
   return (
     <Form {...form}>
+      {
+        errorMessage && <ErrorMessage message={errorMessage} setErrorMessage={setErrorMessage} className="mb-2" />
+      }
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
@@ -115,11 +155,12 @@ console.log(process.env.MongoDB_URL);
 
         <Button
           type="submit"
-          disabled={!remember}
+          disabled={!remember || loading}
           className={`w-full mt-2 transition-colors ease duration-500 ${!remember ? "opacity-50 !cursor-not-allowed" : "hover:bg-secondary hover:opacity-60 cursor-pointer"
             }`}
+            
         >
-          Sign Up
+          {loading ? 'Sign up...':"Sign up"}
         </Button>
 
 

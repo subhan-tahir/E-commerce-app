@@ -11,6 +11,7 @@ export type RegisterFormTypes = {
 export type LoginFormTypes = {
     email: string;
     password: string;
+    remember: boolean;
 }
 
 export type ForgetPasswordFormTypes = {
@@ -45,5 +46,12 @@ export type Product = {
     category: string;
     thumbnail: string;
     image: string;
+}
+
+export type EmailOptions = {
+    to: string;
+    subject: string;
+    text: string;
+    html: string;
 }
 

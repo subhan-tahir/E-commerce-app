@@ -2,7 +2,7 @@
 
 import { RootState } from "@/app/store";
 import ProductCardSkeleton from "@/components/ui/product-card-skeleton";
-import emptycart from "@/public/auth/empty-card.webp"
+import emptycart from "@/public/auth/empty-card.webp";
 import { CartItem } from "@/types";
 import { DeleteIcon, Trash } from "lucide-react";
 import Image from "next/image";
@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import Container from "@/components/container";
 import { removeCart } from "@/app/features/cartSlice";
+import { Button } from "@/components/ui/button";
 const cartPage = () => {
     const [carts, setCart] = useState<CartItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -26,9 +27,9 @@ const cartPage = () => {
 
     //cart is empty
 
-const handleRemoveFromCart = (productId: number) => {
-    dispatch(removeCart(productId as any));
-}
+    const handleRemoveFromCart = (productId: number) => {
+        dispatch(removeCart(productId as any));
+    }
     if (loading) {
         return (
             <Container className="space-y-16 pb-16 max-w-[80rem]">
@@ -43,9 +44,15 @@ const handleRemoveFromCart = (productId: number) => {
     }
     if (carts.length === 0) {
         return (
-            <Container className="space-y-16 pb-16 max-w-[80rem]">  
-                <Image src={}
-            </Container>
+            //     <Container className="space-y-16 pb-16 max-w-[80rem]">  
+            <>
+                <Image src={emptycart} alt="empty cart" width={400} height={400} />
+                <h2 className="text-2xl font-semibold mb-4 text-center">Your cart is empty</h2>
+                <p>You have no items in your cart. Start shopping to add items to your cart.</p>
+
+                <Button className="mt-4">Start Shopping</Button>
+            </>
+            // </Container>
         )
     }
 
@@ -61,7 +68,7 @@ const handleRemoveFromCart = (productId: number) => {
                         <p className="font-medium">{item.title}</p>
                         <p>Price: ${item.price}</p>
                         <p>Quantity: {item.quantity}</p>
-                        <button onClick={() => handleRemoveFromCart(item.id)} className="bg-destructive hover:bg-destructive/80 cursor-pointer text-white px-4 py-2 rounded-md mt-2 flex items-center text-sm">Remove Cart Item <span className="ml-2 text-sm"><Trash size={16}/></span></button>
+                        <button onClick={() => handleRemoveFromCart(item.id)} className="bg-destructive hover:bg-destructive/80 cursor-pointer text-white px-4 py-2 rounded-md mt-2 flex items-center text-sm">Remove Cart Item <span className="ml-2 text-sm"><Trash size={16} /></span></button>
                     </div>
                 ))}
             </div>

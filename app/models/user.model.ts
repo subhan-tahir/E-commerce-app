@@ -1,5 +1,6 @@
 
 import mongoose from "mongoose";
+import { verifyToken } from "../utils/authToken";
 
 const userShema = new mongoose.Schema({
     username: {
@@ -15,7 +16,27 @@ const userShema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    forgotPasswordToken: {
+        type: String,
+        default: null
+    },
+    forgotPasswordExpiry: {
+        type: Date,
+        default: null
+    },
+    verifyToken: {
+        type: String,    
+        default: null
+    },
+    verifyTokenExpiry: {
+        type: Date,
+        default: null
+    },
 })
 
 

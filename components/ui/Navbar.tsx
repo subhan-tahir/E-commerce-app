@@ -4,18 +4,27 @@ import React, { useEffect, useState } from 'react';
 import { Search, ShoppingCart, User, Menu, X, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { routes } from '@/app/lib/routes';
-import { motion } from 'framer-motion';
+import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { Input } from "@/components/ui/input"
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
+import NextAuth from 'next-auth';
+import { useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
+import { Button } from './button';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-
+  const navigate = useRouter();
+const { data: session } = useSession();
+useEffect(() => {
+    console.log('session...', session);
+  }, [session]);
   //select item from slice
   const items = useSelector((state: RootState) => state.cart.items);
   const cartQuantity = useSelector((state: RootState) =>
@@ -29,13 +38,30 @@ const Navbar = () => {
     console.log(items.length);
 
   })
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const { scrollY } = useScroll();
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (scrollY.get() > 50) {
+  //       setScrolled(true);
+  //     } else {
+  //       setScrolled(false);
+  //     }
+  //   };
+
+  //   scrollY.on("change", handleScroll);
+
+  //   return () => {
+  //     scrollY.removeEventListener("change", handleScroll);
+  //   };
+  // }, [scrollY]);
+ useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest as number > 50) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  });
+
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +90,17 @@ const Navbar = () => {
       label: 'Contact',
       href: routes.contact,
     }
-  ]
+  ];
+  const handleLogout = async() => {
+  try{
+   await signOut({ callbackUrl: '/auth/login' });
+   navigate.push('/auth/login');
+    toast.success('Logged out successfully');
+  }
+  catch (error) {
+    console.error('Logout error:', error);
+  };
+}
   return (
     <motion.header
       initial={{ opacity: 0, y: -100 }}
@@ -95,7 +131,7 @@ const Navbar = () => {
           </nav>
 
           {/* Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-md mx-8">
+          {/* <div className="hidden md:flex flex-1 max-w-md mx-8">
             <form onSubmit={handleSearch} className="w-full">
               <div className="relative">
                 <Input
@@ -106,52 +142,77 @@ const Navbar = () => {
                 <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
               </div>
             </form>
-          </div>
+          </div> */}
+          <div className="hidden md:flex flex-1 max-w-md justify-end">
 
-          {/* Right Side Icons */}
-          <div className="flex items-center space-x-4">
-            {/* Wishlist */}
-            <button className="p-2 text-gray-700 hover:text-blue-600 transition-colors relative">
-              <Heart className="h-6 w-6" />
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                0
-              </span>
-            </button>
-
-            {/* Cart */}
-            <Link href={routes.cart}>
-              <button className="p-2 text-gray-700 hover:text-blue-600 transition-colors relative">
-                <ShoppingCart className="h-6 w-6" />
-                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            {/* Right Side Icons */}
+            <div className="flex items-center space-x-4">
+              {/* Wishlist */}
+              <Link href={routes.wishlist}>
+              <button className="p-2 text-gray-700 hover:text-secondary cursor-pointer transition-colors relative">
+                <Heart className="h-6 w-6" />
+                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {cartQuantity}
                 </span>
               </button>
-            </Link>
-            {/* User Menu */}
-            <Link href={routes.profile} className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
-              <User className="h-6 w-6" />
-            </Link>
+              </Link>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="relative w-8 h-8 flex items-center justify-center md:hidden group cursor-pointer"
-              aria-label="Toggle Menu"
-            >
-              <span
-                className={`absolute w-6 h-0.5 bg-gray-800 transition-transform duration-300 ${isMenuOpen ? 'rotate-45 top-1/2' : 'top-2'
-                  }`}
-              />
-              <span
-                className={`absolute w-6 h-0.5 bg-gray-800 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : 'top-1/2'
-                  }`}
-              />
-              <span
-                className={`absolute w-6 h-0.5 bg-gray-800 transition-transform duration-300 ${isMenuOpen ? '-rotate-45 top-1/2' : 'bottom-2'
-                  }`}
-              />
-            </button>
+              {/* Cart */}
+              <Link href={routes.cart}>
+                <button className="p-2 text-gray-700 hover:text-secondary cursor-pointer transition-colors relative">
+                  <ShoppingCart className="h-6 w-6" />
+                  <span className="absolute -top-1 -right-1 bg-primary  text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartQuantity}
+                  </span>
+                </button>
+              </Link>
+              {/* User Menu */}
+              <Link href={routes.profile} className="p-2 text-gray-700 hover:text-secondary cursor-pointer transition-colors">
+                <User className="h-6 w-6" />
+              </Link>
 
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="relative w-8 h-8 flex items-center justify-center md:hidden group cursor-pointer"
+                aria-label="Toggle Menu"
+              >
+                <span
+                  className={`absolute w-6 h-0.5 bg-gray-800 transition-transform duration-300 ${isMenuOpen ? 'rotate-45 top-1/2' : 'top-2'
+                    }`}
+                />
+                <span
+                  className={`absolute w-6 h-0.5 bg-gray-800 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : 'top-1/2'
+                    }`}
+                />
+                <span
+                  className={`absolute w-6 h-0.5 bg-gray-800 transition-transform duration-300 ${isMenuOpen ? '-rotate-45 top-1/2' : 'bottom-2'
+                    }`}
+                />
+              </button>
+
+            </div>
+            {/*login and register btns*/}
+            {session ? (
+              <Link href={routes.login}>
+              
+              <Button
+                onClick={handleLogout}
+                className="transition-colors bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full"
+              >
+                Logout
+              </Button>
+              </Link>
+            ) : (
+              <div className="hidden md:flex items-center space-x-4">
+                <Link href={routes.login} className=" hover:text-scondary hover:bg-secondary transition-colors bg-primary text-white px-6 py-2 rounded-full">
+                  Login
+                </Link>
+                <Link href={routes.register} className=" transition-colors hover:bg-secondary  hover:text-white border-primary border-2 px-6 py-2 rounded-full min-h-[26px]">
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 

@@ -6,7 +6,7 @@ export const routes = {
     products: '/products',
     categories: '/categories',
     cart: '/cart',
-    wishlist: '/wishlist',
+    wishlist: '/favourite-cart',
     profile: '/profile',
     checkout: '/checkout',
     orders: '/orders',
@@ -14,4 +14,5 @@ export const routes = {
     logout: '/logout',
     contact: '/contact',
     about: '/about',
+    verifyEmail: '/auth/verify-email',
 }
