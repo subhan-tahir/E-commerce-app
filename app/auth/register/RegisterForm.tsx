@@ -40,6 +40,8 @@ export default function RegisterForm() {
       email: email || "",
       password: "",
       confirmPassword: "",
+      phone: "",
+      address: "",
       remember: false,
     },
   });
@@ -131,6 +133,32 @@ export default function RegisterForm() {
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
                 <Input type="password" placeholder="Confirm Password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <Input type="password" placeholder="Phone Number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Address</FormLabel>
+              <FormControl>
+                <Input type="text" placeholder="Address" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

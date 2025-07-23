@@ -11,3 +11,18 @@ export const loadCartFromStorage = () => {
     return undefined;
   }
 };
+
+
+//for wishlist
+export const saveWishlistToStorage = (wishlist: any) => {
+  localStorage.setItem('wishlist', JSON.stringify(wishlist));
+}
+
+export const loadWishlistFromStorage = () => {
+  try {
+    const wishlist = localStorage.getItem('wishlist');
+    return wishlist ? JSON.parse(wishlist) : undefined;
+  } catch (err) {
+    return undefined;
+  }
+}

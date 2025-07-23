@@ -8,29 +8,35 @@ import { Badge } from '@/components/ui/badge';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useDispatch } from 'react-redux';
-import {addToCart, addToWishlist } from '@/app/features/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '@/app/features/cartSlice';
+import { toggleWishlist } from '@/app/features/wishlistSlice';
 import { toast } from 'react-toastify';
+import { RootState } from '@/app/store';
 interface ProductCardProps {
   product: Product;
-
+  onAddToCart?: (product: Product) => void;
+  onAddToWishlist?: (product: Product) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  product,
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const dispatch = useDispatch();
+  const wishlist = useSelector((state: RootState) => state.wishlist.wishlistItems);
+
+  const isInWishlist = wishlist.some(item => item.id === Number(product.id));
+
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart(product as any));
-    toast.success(`${product.title} added to cart!`);
+    toast.success(`Added to cart!`);
   };
 
- const handleAddToWishlist = (product: Product) => {
-    // Implement wishlist functionality here
-    dispatch(addToWishlist(product as any)); // Assuming you have a wishlist action
-    
-    toast.success(`${product.title} added to wishlist!`);
-    console.log('Product added to wishlist:', product);
+  const handleToggleWishlist = () => {
+    dispatch(toggleWishlist(product as any));
+    if (isInWishlist) {
+      toast.info(`Removed from wishlist`);
+    } else {
+      toast.success(`Added to wishlist!`);
+    }
   };
 
   return (
@@ -57,9 +63,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 bg-white/80 hover:bg-white shadow-sm"
-                onClick={() => handleAddToWishlist(product)}
+                onClick={handleToggleWishlist}
               >
-                <Heart className="h-4 w-4 text-gray-600" />
+                <Heart
+                  className={`h-4 w-4 ${isInWishlist ? "fill-red-500 text-red-500" : "text-gray-600"}`}
+                />
               </Button>
             </div>
             {product.discountPercentage > 0 && (

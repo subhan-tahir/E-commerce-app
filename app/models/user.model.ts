@@ -1,6 +1,7 @@
 
 import mongoose from "mongoose";
 import { verifyToken } from "../utils/authToken";
+import { Phetsarath } from "next/font/google";
 
 const userShema = new mongoose.Schema({
     username: {
@@ -21,20 +22,17 @@ const userShema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    forgotPasswordToken: {
+ 
+    phone: {
         type: String,
-        default: null
+        default: null   
     },
-    forgotPasswordExpiry: {
-        type: Date,
-        default: null
+    address: {
+        type: String,
+        default: null   
     },
-    verifyToken: {
-        type: String,    
-        default: null
-    },
-    verifyTokenExpiry: {
-        type: Date,
+    profileImage: {
+        type: String,
         default: null
     },
 })

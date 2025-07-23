@@ -11,10 +11,11 @@ export interface Product {
   };
 }
 
+
 export interface CartItem extends Product {
   quantity: number;
   discountPercentage: number; // Optional property for discount percentage
-  whishlist?: boolean; // Optional property for wishlist items
+  whishlist: boolean; // Optional property for wishlist items
 }
 
 export interface Category {

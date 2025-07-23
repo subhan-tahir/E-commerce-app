@@ -3,6 +3,7 @@ import connectDB from "@/app/lib/mongodb";
 import userModel from "@/app/models/user.model";
 import { setAuthCookie } from "@/app/utils/setAuthCookie";
 import bcrypt from 'bcrypt';
+import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -24,10 +25,9 @@ export async function POST(request: Request) {
 
     // Check if user exists
     const user = await userModel.findOne({ email });
-
-    console.log('Found user:', user);
-
+    const token = await getToken({ req: request });
     if (!user) {
+  
       return NextResponse.json({ message: "❌ Invalid credentials", status: 401, success: false }, { status: 401 });
     }
 
@@ -39,8 +39,9 @@ export async function POST(request: Request) {
     // Prepare user object for NextAuth (exclude password and MongoDB metadata)
     const userData = {
       id: user._id.toString(), // Convert ObjectId to string for NextAuth
-      name: user.name || user.email.split('@')[0], // Fallback to email base if no name
+      name: user.username || user.email.split('@')[0], // Fallback to email base if no name
       email: user.email,
+      token: token // Include token if needed
       // Add other fields as needed (e.g., image: user.image)
     };
 

@@ -6,7 +6,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Define the state shape
 interface CartState {
     items: CartItem[];
-    wishlistItems?: CartItem[]; // Optional wishlist items
+    wishlistItems: CartItem[]; // Optional wishlist items
     total: number; // price total
 }
 
@@ -48,14 +48,23 @@ export const cartSlice = createSlice({
         },
         // ✅ Add to Wishlist
         addToWishlist: (state, action: PayloadAction<CartItem>) => {
-            const existingItem = state.wishlist.find(item => item.id === action.payload.id);
-            if (!existingItem) {
-                state.wishlist.push(action.payload);
+            const existingItem = state.wishlistItems.find(item => item.id === action.payload.id);
+
+            if (existingItem) {
+                // If item exists, increment quantity
+                existingItem.quantity += 1;
+            } else {
+                // If not, add item with quantity 1
+                state.wishlistItems.push({ ...action.payload, quantity: 1 });
+                console.log('Added to wishlist:', action.payload);
             }
+
+            // Update total (optional)
+            state.total = state.wishlistItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
         },
-            // ✅ Remove from Wishlist
+
         removeFromWishlist: (state, action: PayloadAction<number>) => {
-            state.wishlist = state.wishlist.filter(item => item.id !== action.payload);
+            state.wishlistItems = state.wishlistItems.filter(item => item.id !== action.payload);
         },
 
     },

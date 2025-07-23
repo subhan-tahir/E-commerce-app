@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Product } from '@/app/types';
 import { useSearchParams } from 'next/navigation';
+import { error } from 'console';
 
 const API_BASE_URL = 'https://fakestoreapi.com';
 
@@ -48,9 +49,9 @@ export const api = {
       throw new Error('Failed to fetch product');
     }
   },
-createUser: async (user: any) => {
+  createUser: async (user: any) => {
     try {
-    const response = await axios.post(`/api/auth/register`, user);
+      const response = await axios.post(`/api/auth/register`, user);
 
       return response.data;
     } catch (error) {
@@ -58,7 +59,7 @@ createUser: async (user: any) => {
       throw new Error('Failed to create user');
     }
   },
-  loginUser:async (credentials: { email: string; password: string }) => {
+  loginUser: async (credentials: { email: string; password: string }) => {
     try {
       const response = await axios.post(`/api/auth/login`, credentials);
       return response.data;
@@ -75,6 +76,53 @@ createUser: async (user: any) => {
       console.error('Error verifying email:', error);
       throw new Error('Failed to verify email');
     }
-  }
+  },
+  updateUser: async ({ username, email, phone, address, accessToken }: any) => {
+    try {
+      const response = await axios.put(
+        "/api/auth/update",
+        { username, email, phone, address },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("Update response:", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error("Error updating user:", error);
+      throw new Error(error.response?.data?.message || "Failed to update user");
+    }
+  },
+uploadProfileImage:  async (formData: FormData, accessToken?: string) => {
+  try {
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      headers: {
+        Authorization: accessToken ? `Bearer ${accessToken}` : "",
+      },
+      body: formData,
+    });
 
-}; 
+    // Check if response is JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await response.text();
+      console.error("Non-JSON response:", text);
+      throw new Error("Server returned non-JSON response");
+    }
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to upload image");
+    }
+
+    return data;
+  } catch (error: any) {
+    console.error("API error:", error);
+    throw error;
+  }
+}
+  };

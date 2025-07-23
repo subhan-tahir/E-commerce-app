@@ -47,14 +47,21 @@ export default function LoginForm() {
         redirect: false,
         email: data.email.trim().toLowerCase(), // Normalize email
         password: data.password,
+        
       });
-
+      
+      console.log('Login result:', result);
+      if(result?.ok){
+        
+        toast.success('Login successful');
+      }
       if (result?.error) {
         setErrorMessage(result.error); // Display error to user
       } else {
         form.reset();
         router.push(routes.home);
-        toast.success('Login successful');
+        console.log('Login successful, redirecting to home');
+        
       }
     } catch (error) {
       console.error('Login error:', error);

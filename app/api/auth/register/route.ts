@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     try {
         connectDB();
         const body = await request.json();
-        const { username, email, password, confirmPassword } = body
+        const { username, email, password, confirmPassword,phone,address } = body
         //user find
         const userExist = await userMOdel.findOne({ email });
         if (userExist) {
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
         }
         console.log(body);
         //if any field is missing
-        if (!username || !email || !password || !confirmPassword) {
+        if (!username || !email || !password || !confirmPassword || !phone || !address) {
             return  NextResponse.json({ message: "❌ Required fields are missing", status: 400 });
         }
         //mathching password and confirm password

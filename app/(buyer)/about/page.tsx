@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Container from "@/components/container";
+import UploadFileForm from "@/components/UploadFileForm";
 const sections = [
     {
         title: "Our Mission",
@@ -27,6 +28,7 @@ const AboutPage = () => {
     return (
         <div className="flex flex-col min-h-screen bg-gray-50">
             {/* Hero Section */}
+            {/* <UploadFileForm /> */}
             <section className="relative w-full h-[350px] md:h-[450px] flex items-center justify-center overflow-hidden mb-12">
                 <Image
                     src="/about/about-us1.jpg"

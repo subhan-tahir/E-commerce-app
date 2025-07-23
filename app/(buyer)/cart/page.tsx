@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux"
 import Container from "@/components/container";
 import { removeCart } from "@/app/features/cartSlice";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-toastify";
+import EmptyCard from "@/components/empty-card";
 const cartPage = () => {
     const [carts, setCart] = useState<CartItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -29,6 +31,7 @@ const cartPage = () => {
 
     const handleRemoveFromCart = (productId: number) => {
         dispatch(removeCart(productId as any));
+        toast.success(`Removed from cart!`);
     }
     if (loading) {
         return (
@@ -42,21 +45,15 @@ const cartPage = () => {
 
         )
     }
-    if (carts.length === 0) {
-        return (
-            //     <Container className="space-y-16 pb-16 max-w-[80rem]">  
-            <>
-                <Image src={emptycart} alt="empty cart" width={400} height={400} />
-                <h2 className="text-2xl font-semibold mb-4 text-center">Your cart is empty</h2>
-                <p>You have no items in your cart. Start shopping to add items to your cart.</p>
-
-                <Button className="mt-4">Start Shopping</Button>
-            </>
-            // </Container>
-        )
-    }
+ 
 
     return (
+        <>
+        {
+            carts.length === 0 && (
+                <EmptyCard title="Your cart is empty" description="You have no items in your cart. Start shopping to add items to your cart." btnText="Start Shopping" />
+            )
+        }
         <Container className="space-y-16 pb-16 max-w-[80rem]">
             <div className="p-8">
                 <h2 className="text-2xl font-semibold mb-4 text-center">Cart Items</h2>
@@ -73,6 +70,7 @@ const cartPage = () => {
                 ))}
             </div>
         </Container>
+        </>
     )
 }
 

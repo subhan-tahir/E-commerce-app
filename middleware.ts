@@ -12,6 +12,10 @@ export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
 
   console.log('Middleware - token:', token);
+//if user login with github then redirect to home page
+// if (session.user.) {
+//     return NextResponse.redirect(new URL('/', request.url));
+//   }
 
   if (isPrivate && !token && pathname !== '/') {
     return NextResponse.redirect(new URL('/auth/login', request.url));

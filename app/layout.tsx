@@ -5,7 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
 import NextTopLoader from "nextjs-toploader";
 import { ReduxProvider } from "@/components/providers/ReduxProvider";
-import { ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,7 +41,21 @@ export default function RootLayout({
         <ReduxProvider>
           <AuthProvider>
            
-            <ToastContainer />
+            <ToastContainer 
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              transition={Bounce}
+              toastClassName="custom-toast"
+              theme="colored"
+              progressClassName={"#6636c7"}
+            />
             {children}
           </AuthProvider>
         </ReduxProvider>

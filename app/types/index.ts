@@ -6,6 +6,8 @@ export type RegisterFormTypes = {
     password: string;
     confirmPassword: string;
     remember: boolean;
+    phone: string;
+    address: string;
 }
 
 export type LoginFormTypes = {
@@ -26,8 +28,25 @@ export type User = {
     password: string;
     createdAt: string;
     updatedAt: string;
-    avatar: string;
+    profileImage: string;
     role: string;
+}
+export type session = {
+    id: string;
+    name: string;
+    email: string;
+    profileImage: string;
+    phone: string;
+    address: string;
+    accessToken: string;
+}
+//update user
+export type UpdateUser = {
+    username: string;
+    email: string;
+    phone: string;
+    address: string;
+    profileImage: string;
 }
 
 //product
