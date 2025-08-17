@@ -46,10 +46,9 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
-    { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
-    { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
-    { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' }
+    { icon: Facebook, href: 'https://www.facebook.com/profile.php?id=61577715643768', label: 'Facebook' },
+    { icon: Instagram, href: 'https://www.instagram.com/subhantahir430/', label: 'Instagram' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/muhammad-subhan-tahir-bb9a20368/', label: 'LinkedIn' }
   ];
 
   return (
@@ -189,7 +188,7 @@ const Footer = () => {
               <span className="hidden md:inline">•</span>
               <span className="hidden md:inline">Made with</span>
               <Heart className="h-4 w-4 text-red-500 hidden md:inline" />
-              <span className="hidden md:inline">by EStore Team</span>
+              <span className="hidden md:inline">by Subhan Tahir</span>
             </div>
 
             {/* Social Links */}

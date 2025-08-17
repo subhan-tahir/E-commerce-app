@@ -101,7 +101,7 @@ const ProfileForm = () => {
         profileImage: session.user.profileImage || "",
       });
     }
-  }, [session, form]);
+  }, [session, form]);//session mount when component mounts
   return (
     <>
       <Form {...form}>

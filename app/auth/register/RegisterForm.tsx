@@ -80,7 +80,7 @@ export default function RegisterForm() {
   return (
     <Form {...form}>
       {
-        errorMessage && <ErrorMessage message={errorMessage} setErrorMessage={setErrorMessage} className="mb-2" />
+        errorMessage && <ErrorMessage message={errorMessage} setErrorMessage={()=>setErrorMessage('')} className="mb-2" />
       }
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField

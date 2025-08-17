@@ -12,9 +12,9 @@ export async function POST(request: NextRequest) {
     }
 
     await dbConnect();
-    const verificationToken = await VerificationTokenModel.findOne({
+    const verificationToken = await UserModel.findOne({
       email: email.toLowerCase(),
-      code,
+      verifyToken: code,
     });
 
     if (!verificationToken) {

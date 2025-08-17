@@ -54,6 +54,7 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: #7837ff;
   --secondary: #6636c7;
+  --textColor:#7A7A73,
   --label-color:#20eeb0;
   --primary-foreground: oklch(0.985 0 0);
   /* --secondary: oklch(0.97 0 0); */

@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { toggleWishlist } from "@/app/features/wishlistSlice";
 import { Product } from "@/app/types";
 import { toast } from "react-toastify";
+import EmptyCard from "@/components/empty-card";
 
 interface ProductCardProps {
     product: Product;
@@ -83,19 +84,21 @@ const WhishListPage = () => {
     return (
         <>
             {
-                wishlistItems.length === 0 && (
-                    <div className="flex flex-col justify-center items-center py-5">
-                        <h2 className="text-2xl font-semibold text-center">No Favourite Cart Items</h2>
-                        {
+                wishlistItems.length === 0 ? (
+                    // <div className="flex flex-col justify-center items-center py-5">
+                    //     <h2 className="text-2xl font-semibold text-center">No Favourite Cart Items</h2>
+                    //     {
 
-                            <Image src={emptycart} alt="empty cart" width={400} height={400} className="mx-auto" />
-                        }
-                        <p>You have no favourite cart items.</p>
-                        <Button className="mt-4">Add Favourite cart</Button>
-                    </div>
+                    //         <Image src={emptycart} alt="empty cart" width={400} height={400} className="mx-auto" />
+                    //     }
+                    //     <p>You have no favourite cart items.</p>
+                    //   <Link></Link>  <Button className="mt-4">Add Favourite cart</Button>
+                    <EmptyCard title={"No Favourite Cart Items"} description={"You have no favourite cart items."} btnText={"Add Favourite cart"}/>
+                    
 
-                )
-            }
+                ):
+                (
+
             <Container className="space-y-16 pb-16 max-w-[80rem]">
                 <h2 className="text-2xl font-semibold mb-4 text-center">{wishlistItems.length === 0 ? "" : "Favourite Cart Items"}</h2>
                 <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -190,6 +193,8 @@ const WhishListPage = () => {
                     ))}
                 </div>
             </Container>
+                )
+            }
         </>
     )
 }

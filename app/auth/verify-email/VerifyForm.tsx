@@ -6,6 +6,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { routes } from '@/app/lib/routes';
+import Link from 'next/link';
 const VerifyForm = () => {
     const [code, setCode] = useState('');
     const [loading, setLoading] = useState(false);
@@ -18,6 +19,7 @@ const VerifyForm = () => {
         setLoading(true);
         try {
             const response = await axios.post('/api/auth/verify-email', { email, code });
+            console.log('response...',response);
             if (response.data.success) {
                 toast.success('Email verified successfully!');
                 router.push(routes.login);
@@ -49,6 +51,9 @@ const VerifyForm = () => {
             <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Verifying...' : 'Verify Email'}
             </Button>
+            <p className="text-sm text-muted-foreground mt-4">
+                Didn’t receive the code? <Link href={routes.resendEmail} className="text-primary hover:underline">Resend Code</Link>
+            </p>
         </form>
     )
 }

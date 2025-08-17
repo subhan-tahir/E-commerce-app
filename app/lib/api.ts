@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Product } from '@/app/types';
+import { ContactFormTypes, Product } from '@/app/types';
 import { useSearchParams } from 'next/navigation';
 import { error } from 'console';
 
@@ -123,6 +123,15 @@ uploadProfileImage:  async (formData: FormData, accessToken?: string) => {
   } catch (error: any) {
     console.error("API error:", error);
     throw error;
+  }
+},
+contactUs: async (formData: ContactFormTypes) => {
+  try {
+    const response = await axios.post('/api/contact-us', formData);
+    return response.data;
+  } catch (error) {
+    console.error('Error sending contact message:', error);
+    throw new Error('Failed to send contact message');
   }
 }
   };

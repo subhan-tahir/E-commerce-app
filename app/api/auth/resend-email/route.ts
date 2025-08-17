@@ -1,57 +1,53 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+// app/api/auth/resend-email/route.ts
+import { NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/mongodb';
-import UserModel from '@/app/models/user.model';
+import userModel from '@/app/models/user.model';
 import VerificationTokenModel from '@/app/models/verificationToken.model';
 import { generateVerificationCode, sendEmail } from '@/app/services/emailService';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
-  const { email } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ message: 'Email is required' });
-  }
-
+export async function POST(req: Request) {
   try {
     await dbConnect();
-    const user = await UserModel.findOne({ email: email.toLowerCase() });
+    const body = await req.json();
+    const { email } = body;
+    if (!email) {
+      return NextResponse.json({ message: 'Email is required', status: 400 });
+    }
+
+    const user = await userModel.findOne({ email: email.toLowerCase() });
+
+    console.log('User found:', user);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return NextResponse.json({ message: 'User not found', success: false }, { status: 404 });
     }
 
     if (user.isVerified) {
-      return res.status(400).json({ message: 'User is already verified' });
+      return NextResponse.json({ message: 'User is already verified', success: false }, { status: 400 });
     }
 
     // Generate and send verification code
     const verificationCode = generateVerificationCode();
-    await sendEmail({
-      text: `Your verification code is: ${verificationCode}`,
+    await sendEmail('verification', {
       to: email,
-      subject: 'Verify Your EStore Account',
-      html: `
-        <p>Welcome to EStore!</p>
-        <p>Your verification code is: <strong>${verificationCode}</strong></p>
-        <p>Please enter this code to verify your account. It expires in 24 hours.</p>
-      `,
+      subject: 'Resend Verification Code',
+      text: `Your verification code is: ${verificationCode}. Please enter this code to verify your account.`,
     });
 
     // Store verification code
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    await VerificationTokenModel.findOneAndDelete({ email: email.toLowerCase() });
-    await VerificationTokenModel.create({
-      email: email.toLowerCase(),
-      code: verificationCode,
-      expires,
-    });
 
-    return res.status(200).json({ message: 'Verification code sent' });
+   const updateResult = await userModel.updateOne(
+      { email: email.toLowerCase() },
+      { $set: { verifyToken: verificationCode, verifyTokenExpiry: expires } },
+      { runValidators: false } // Disable validation for this update
+    );
+
+    console.log('Update result:', updateResult);
+
+    return NextResponse.json({ message: 'Verification code sent', success: true, status: 200 });
   } catch (error) {
-    console.error('Resend verification error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    console.error(error);
+    return new Response('❌ Internal Server Error', { status: 500 });
   }
 }

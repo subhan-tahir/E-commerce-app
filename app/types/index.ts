@@ -20,6 +20,11 @@ export type ForgetPasswordFormTypes = {
     email: string;
 }
 
+export type ResetPasswordFormTypes = {
+    password: string;
+    confirmPassword: string;
+};
+
 //user 
 export type User = {
     id: string;
@@ -72,5 +77,12 @@ export type EmailOptions = {
     subject: string;
     text: string;
     html: string;
+}
+
+//contact form
+export type ContactFormTypes = {
+    fullName: string;
+    email: string;
+    message: string;
 }
 

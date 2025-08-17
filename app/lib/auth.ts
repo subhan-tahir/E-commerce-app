@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import connectDB from "@/app/lib/mongodb";
 import userModel from "@/app/models/user.model";
 import bcrypt from "bcrypt";
+import { NextResponse } from "next/server";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -39,6 +40,10 @@ export const authOptions: NextAuthOptions = {
           if (!isPasswordMatch) {
             throw new Error("Invalid credentials");
           }
+          console.log('User found:', user.isVerified);
+          if (!user.isVerified) {
+          throw new Error(`User not verified. Please verify your email at /auth/verify-email?email=${encodeURIComponent(credentials.email)}`)
+          }
 
           return {
             id: user._id.toString(),
@@ -47,7 +52,7 @@ export const authOptions: NextAuthOptions = {
             profileImage: user.profileImage as string || "",
             phone: user.phone || "",
             address: user.address || "",
-          };
+          };``
         } catch (error) {
           console.error("Authorize error:", error);
           throw new Error("Authentication failed");
@@ -93,6 +98,7 @@ export const authOptions: NextAuthOptions = {
             session.user.phone = user.phone || "";
             session.user.address = user.address || "";
             session.user.profileImage = user.profileImage || "";
+            session.user.isVerified = user.isVerified;
           }
         } catch (error) {
           console.error("Error fetching user data for session:", error);
@@ -102,6 +108,6 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login",
   },
 };

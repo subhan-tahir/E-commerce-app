@@ -13,6 +13,8 @@ import { addToCart } from '@/app/features/cartSlice';
 import { toggleWishlist } from '@/app/features/wishlistSlice';
 import { toast } from 'react-toastify';
 import { RootState } from '@/app/store';
+import Image from 'next/image';
+import noimage from '@/public/no-image.jpg';
 interface ProductCardProps {
   product: Product;
   onAddToCart?: (product: Product) => void;
@@ -53,8 +55,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <Card className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-white">
         <CardHeader className="p-0 relative">
           <div className="relative h-48 bg-gray-50 rounded-t-lg overflow-hidden">
-            <img
-              src={product.image}
+            <Image 
+            sizes='(max-width: 768px) 100vw, 33vw'
+              fill
+              src={product.image || noimage}
               alt={product.title}
               className="object-contain h-full w-full p-4 group-hover:scale-105 transition-transform duration-300"
             />

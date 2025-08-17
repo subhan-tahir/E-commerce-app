@@ -4,7 +4,7 @@ import userModel from "@/app/models/user.model";
 import { setAuthCookie } from "@/app/utils/setAuthCookie";
 import bcrypt from 'bcrypt';
 import { getToken } from "next-auth/jwt";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
     // Check if user exists
     const user = await userModel.findOne({ email });
-    const token = await getToken({ req: request });
+    const token = await getToken({ req: request as NextRequest});
     if (!user) {
   
       return NextResponse.json({ message: "❌ Invalid credentials", status: 401, success: false }, { status: 401 });
@@ -36,6 +36,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "❌ Invalid credentials", status: 401, success: false }, { status: 401 });
     }
 
+    if (!user.isVerified) {
+      return NextResponse.json({ message: "❌ User not verified", status: 403
+      }, { status: 403 });
+    }
     // Prepare user object for NextAuth (exclude password and MongoDB metadata)
     const userData = {
       id: user._id.toString(), // Convert ObjectId to string for NextAuth

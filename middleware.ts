@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-const PUBLIC_PATHS = ['/', '/auth/login', '/auth/register', '/auth/forget-password'];
+const PUBLIC_PATHS = ['/', '/auth/login', '/auth/register', '/auth/forget-password', '/auth/reset-password'];
 const PRIVATE_PATHS = ['/cart', '/wishlist', '/profile'];
 
 export async function middleware(request: NextRequest) {
@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/auth/login', '/auth/register', '/auth/forget-password', '/cart', '/wishlist', '/profile'],
+  matcher: ['/','/auth/forget-password','/auth/reset-password', '/auth/login', '/auth/register', '/cart', '/wishlist', '/profile'],
 };
 
 

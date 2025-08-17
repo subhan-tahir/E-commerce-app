@@ -76,7 +76,7 @@ export default function LoginForm() {
       {errorMessage && (
         <ErrorMessage
           message={errorMessage}
-          setErrorMessage={setErrorMessage}
+           setErrorMessage={() => setErrorMessage('')}
           className="mb-4"
         />
       )}

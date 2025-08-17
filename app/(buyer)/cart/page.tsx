@@ -45,31 +45,33 @@ const cartPage = () => {
 
         )
     }
- 
+
 
     return (
         <>
-        {
-            carts.length === 0 && (
-                <EmptyCard title="Your cart is empty" description="You have no items in your cart. Start shopping to add items to your cart." btnText="Start Shopping" />
-            )
-        }
-        <Container className="space-y-16 pb-16 max-w-[80rem]">
-            <div className="p-8">
-                <h2 className="text-2xl font-semibold mb-4 text-center">Cart Items</h2>
-                {carts.map((item) => (
-                    <div key={item.id} className="border p-4 mb-2 rounded-md shadow-sm">
-                        <div className="relative">
-                            <Image src={item.image} alt={item.title} width={200} height={200} />
+            {
+                carts.length === 0 ? (
+                    <EmptyCard title="Your cart is empty" description="You have no items in your cart. Start shopping to add items to your cart." btnText="Start Shopping" />
+                ) : (
+
+                    <Container className="space-y-16 pb-16 max-w-[80rem]">
+                        <div className="p-8">
+                            <h2 className="text-2xl font-semibold mb-4 text-center">{carts.length === 0 ? "" : "Your Cart Items"}</h2>
+                            {carts.map((item) => (
+                                <div key={item.id} className="border p-4 mb-2 rounded-md shadow-sm">
+                                    <div className="relative">
+                                        <Image src={item.image} alt={item.title} width={200} height={200} />
+                                    </div>
+                                    <p className="font-medium">{item.title}</p>
+                                    <p>Price: ${item.price}</p>
+                                    <p>Quantity: {item.quantity}</p>
+                                    <button onClick={() => handleRemoveFromCart(item.id)} className="bg-destructive hover:bg-destructive/80 cursor-pointer text-white px-4 py-2 rounded-md mt-2 flex items-center text-sm">Remove Cart Item <span className="ml-2 text-sm"><Trash size={16} /></span></button>
+                                </div>
+                            ))}
                         </div>
-                        <p className="font-medium">{item.title}</p>
-                        <p>Price: ${item.price}</p>
-                        <p>Quantity: {item.quantity}</p>
-                        <button onClick={() => handleRemoveFromCart(item.id)} className="bg-destructive hover:bg-destructive/80 cursor-pointer text-white px-4 py-2 rounded-md mt-2 flex items-center text-sm">Remove Cart Item <span className="ml-2 text-sm"><Trash size={16} /></span></button>
-                    </div>
-                ))}
-            </div>
-        </Container>
+                    </Container>
+                )
+            }
         </>
     )
 }

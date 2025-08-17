@@ -35,10 +35,27 @@ const userShema = new mongoose.Schema({
         type: String,
         default: null
     },
+    resetToken: {
+        type: String,
+        default: null
+    },
+    resetTokenExpiry: {
+        type: Date,
+        default: null
+    },
+    verifyToken: {
+    type: String,
+    default: null,
+  },
+  verifyTokenExpiry: {
+    type: Date,
+    default: null,
+  },
+
 })
 
 
 
-const userMOdel = mongoose.models.Users || mongoose.model('Users', userShema);
+const userModel = mongoose.models.Users || mongoose.model('Users', userShema);
 
-export default userMOdel
+export default userModel
