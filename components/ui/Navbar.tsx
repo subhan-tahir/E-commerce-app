@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Search, ShoppingCart, User, Menu, X, Heart, LogOut } from 'lucide-react';
+import { ShoppingCart, User,  Heart, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { routes } from '@/app/lib/routes';
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
-import { Input } from "@/components/ui/input"
-import { usePathname, useRouter } from 'next/navigation';
+
+import { usePathname } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
-import NextAuth from 'next-auth';
+
 import { useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import { Button } from './button';
@@ -17,19 +17,18 @@ import { toast } from 'react-toastify';
 import { Skeleton } from './skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import defaultAvatar from '@/public/auth/default-avatar.png';
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const navigate = useRouter();
+
   const { data: session, status } = useSession();
   useEffect(() => {
     console.log('session...', session, status);
-  }, [session]);
+  }, [session, status]);
   //select item from slice
-  const items = useSelector((state: RootState) => state.cart.items);
+  // const items = useSelector((state: RootState) => state.cart.items);
   const cartQuantity = useSelector((state: RootState) =>
     state.cart.items.reduce((acc, item) => acc + item.quantity, 0)
   );
@@ -38,32 +37,10 @@ const Navbar = () => {
   const wishlistQuantity = useSelector((state: RootState) =>
     state.wishlist.wishlistItems.reduce((acc, item) => acc + item.quantity, 0)
   );
-  // useEffect(() => {
-  //   console.log(items);
-  //   console.log('wishlistItems', wishlistItems);
-  //   console.log('cartQuantity', cartQuantity);
-  //   console.log('wishlistQuantity', wishlistQuantity);
-  // }, [items, wishlistItems, cartQuantity, wishlistQuantity]);
-  useEffect(() => {
-    console.log('items', items.length);
 
-  })
+  
   const { scrollY } = useScroll();
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (scrollY.get() > 50) {
-  //       setScrolled(true);
-  //     } else {
-  //       setScrolled(false);
-  //     }
-  //   };
 
-  //   scrollY.on("change", handleScroll);
-
-  //   return () => {
-  //     scrollY.removeEventListener("change", handleScroll);
-  //   };
-  // }, [scrollY]);
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest as number > 50) {
       setScrolled(true);
@@ -73,11 +50,7 @@ const Navbar = () => {
   });
 
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle search functionality
-    console.log('Searching for:', searchQuery);
-  };
+ 
 
   const navItems = [
     {
@@ -88,10 +61,7 @@ const Navbar = () => {
       label: 'Products',
       href: routes.products,
     },
-    // {
-    //   label: 'Categories',
-    //   href: routes.categories,
-    // },
+  
     {
       label: 'About',
       href: routes.about,
@@ -187,19 +157,19 @@ const Navbar = () => {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="relative border-0 p-0 w-8 h-8 cursor-pointer hover:bg-transparent focus-visible:ring-0" >
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={(session?.user?.profileImage || session?.user?.image) ?? undefined} alt="User Avatar" />
-                          <AvatarFallback>{session?.user?.name?.charAt(0) || 'U'}</AvatarFallback>
+                          <AvatarImage src={(session?.user?.profileImage || session?.user?.profileImage) ?? undefined} alt="User Avatar" />
+                          <AvatarFallback>{session?.user?.username?.charAt(0) || 'U'}</AvatarFallback>
                         </Avatar>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-62">
                       <DropdownMenuItem>
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={(session?.user?.profileImage || session?.user?.image) ?? undefined} alt="User Avatar" />
-                          <AvatarFallback>{session?.user?.name?.charAt(0) || 'U'}</AvatarFallback>
+                          <AvatarImage src={(session?.user?.profileImage || session?.user?.profileImage) ?? undefined} alt="User Avatar" />
+                          <AvatarFallback>{session?.user?.username?.charAt(0) || 'U'}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col space-y-1">
-                          <span className="text-sm font-medium">{session?.user?.name || 'User'}</span>
+                          <span className="text-sm font-medium">{session?.user?.username || 'User'}</span>
                           <span className="text-xs text-gray-500">{session?.user?.email || 'User Email'}</span>
                         </div>
                       </DropdownMenuItem>
@@ -290,19 +260,19 @@ const Navbar = () => {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="relative border-0 p-0 w-8 h-8 cursor-pointer hover:bg-transparent focus-visible:ring-0" >
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={(session?.user?.profileImage || session?.user?.image) ?? undefined} alt="User Avatar" />
-                          <AvatarFallback>{session?.user?.name?.charAt(0) || 'U'}</AvatarFallback>
+                          <AvatarImage src={(session?.user?.profileImage || session?.user?.profileImage) ?? undefined} alt="User Avatar" />
+                          <AvatarFallback>{session?.user?.username?.charAt(0) || 'U'}</AvatarFallback>
                         </Avatar>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-62">
                       <DropdownMenuItem>
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={(session?.user?.profileImage || session?.user?.image) ?? undefined} alt="User Avatar" />
-                          <AvatarFallback>{session?.user?.name?.charAt(0) || 'U'}</AvatarFallback>
+                          <AvatarImage src={(session?.user?.profileImage || session?.user?.profileImage) ?? undefined} alt="User Avatar" />
+                          <AvatarFallback>{session?.user?.username?.charAt(0) || 'U'}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col space-y-1">
-                          <span className="text-sm font-medium">{session?.user?.name || 'User'}</span>
+                          <span className="text-sm font-medium">{session?.user?.username || 'User'}</span>
                           <span className="text-xs text-gray-500">{session?.user?.email || 'User Email'}</span>
                         </div>
                       </DropdownMenuItem>

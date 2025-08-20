@@ -1,7 +1,5 @@
-// app/api/auth/login/route.ts
 import connectDB from "@/app/lib/mongodb";
 import userModel from "@/app/models/user.model";
-import { setAuthCookie } from "@/app/utils/setAuthCookie";
 import bcrypt from 'bcrypt';
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";

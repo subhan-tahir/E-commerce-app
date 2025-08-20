@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/app/lib/mongodb';
 import userModel from '@/app/models/user.model';
-import VerificationTokenModel from '@/app/models/verificationToken.model';
+
 import { generateVerificationCode, sendEmail } from '@/app/services/emailService';
 
 export async function POST(req: Request) {

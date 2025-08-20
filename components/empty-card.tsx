@@ -2,13 +2,12 @@ import React from 'react'
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
 import emptycart from "@/public/auth/empty-card.webp";
-import { title } from 'process';
 import { routes } from '@/app/lib/routes';
 import Link from 'next/link';
 interface  EmptyCardProps  {
-title:String,
-description:String,
-btnText:String
+title:string,
+description:string,
+btnText:string
 }
 const EmptyCard = ({title,description,btnText}:EmptyCardProps) => {
   return (

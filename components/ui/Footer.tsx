@@ -6,7 +6,7 @@ import { routes } from '@/app/lib/routes';
 import { motion } from 'framer-motion';
 import { 
   Facebook, 
-  Twitter, 
+  
   Instagram, 
   Linkedin, 
   Mail, 
@@ -70,7 +70,7 @@ const Footer = () => {
               <span className="text-xl font-bold text-gray-900">EStore</span>
             </div>
             <p className="text-gray-600 mb-6 max-w-md">
-              Discover amazing products at unbeatable prices. We're committed to providing the best shopping experience with quality products and excellent customer service.
+              Discover amazing products at unbeatable prices. We&apos;re committed to providing the best shopping experience with quality products and excellent customer service.
             </p>
             
             {/* Contact Info */}

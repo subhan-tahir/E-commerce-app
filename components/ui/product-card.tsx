@@ -3,7 +3,7 @@
 import React from 'react';
 import { Product } from '@/app/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import { RootState } from '@/app/store';
 import Image from 'next/image';
 import noimage from '@/public/no-image.jpg';
+import { CartItem } from '@/types';
 interface ProductCardProps {
   product: Product;
   onAddToCart?: (product: Product) => void;
@@ -27,13 +28,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const isInWishlist = wishlist.some(item => item.id === Number(product.id));
 
-  const handleAddToCart = (product: Product) => {
-    dispatch(addToCart(product as any));
-    toast.success(`Added to cart!`);
+const handleAddToCart = (product: Product) => {
+    const cartItem: CartItem = {
+      ...product,
+      id: Number(product.id),
+      quantity: 1, // Default quantity
+      discountPercentage: 0, // Default discount
+      wishlist: isInWishlist, // Reflect wishlist status
+    };
+    dispatch(addToCart(cartItem)); // No `as any` needed
+    toast.success("Added to cart!");
   };
 
   const handleToggleWishlist = () => {
-    dispatch(toggleWishlist(product as any));
+    const cartItem: CartItem = {
+      ...product,
+      id: Number(product.id),
+      quantity: 1, // Default quantity
+      discountPercentage: 0, // Default discount
+      wishlist: isInWishlist, // Reflect wishlist status
+    }
+    dispatch(toggleWishlist(cartItem));
     if (isInWishlist) {
       toast.info(`Removed from wishlist`);
     } else {
@@ -67,7 +82,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 bg-white/80 hover:bg-white shadow-sm"
-                onClick={handleToggleWishlist}
+                onClick={() => handleToggleWishlist()}
               >
                 <Heart
                   className={`h-4 w-4 ${isInWishlist ? "fill-red-500 text-red-500" : "text-gray-600"}`}

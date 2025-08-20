@@ -54,8 +54,12 @@ export default function ResetPasswordForm() {
       } else {  
         toast.error(res.data.message || "Failed to reset password.");
       }
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Something went wrong.");
+    } catch (err:unknown) {
+      console.log(err);
+      if (err instanceof Error) {
+        toast.error(err.message);
+        return;
+      }
     } finally {
       setLoading(false);
     }

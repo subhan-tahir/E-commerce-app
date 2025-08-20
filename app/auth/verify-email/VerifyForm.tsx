@@ -27,6 +27,7 @@ const VerifyForm = () => {
                 toast.error(response.data.message || 'Invalid code.');
             }
         } catch (err) {
+            console.error('Error verifying email:', err);
             toast.error('Verification failed.');
         } finally {
             setLoading(false);
@@ -38,7 +39,7 @@ const VerifyForm = () => {
         if (email) {
             setEmail(email);
         }
-    }, []);
+    }, [searchParams]);
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
             <Input

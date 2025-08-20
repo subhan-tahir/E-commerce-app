@@ -19,11 +19,11 @@ export const store = configureStore({
 });
 
 store.subscribe(() => {
-  saveCartToStorage(store.getState().cart); // Save on every update
+  saveCartToStorage(store.getState().cart.items); // Save on every update
 });
 
 store.subscribe(()=>{
-  saveWishlistToStorage(store.getState().wishlist);
+  saveWishlistToStorage(store.getState().wishlist.items);
 })
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

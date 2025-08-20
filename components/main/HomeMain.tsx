@@ -35,6 +35,7 @@ const HomeMain = () => {
             setProducts(productsData);
             setCategories(categoriesData);
           } catch (err) {
+            console.error("Failed to load data.", err);
             setError("Failed to load data.");
           } finally {
             setLoading(false);
@@ -51,6 +52,7 @@ const HomeMain = () => {
               const data = await api.getProductsByCategory(selectedCategory);
               setProducts(data);
             } catch (err) {
+              console.error("Failed to load products by category.", err);
               setError("Failed to load products by category.");
             } finally {
               setLoading(false);
@@ -62,6 +64,7 @@ const HomeMain = () => {
               const data = await api.getProducts();
               setProducts(data);
             } catch (err) {
+              console.error("Failed to load products.", err);
               setError("Failed to load products.");
             } finally {
               setLoading(false);

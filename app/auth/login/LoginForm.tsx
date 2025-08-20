@@ -25,6 +25,7 @@ import { Separator } from '@/components/ui/separator';
 import githubicon from "@/public/icons/github.png";
 import googleicon from "@/public/icons/search.png";
 import Image from 'next/image';
+import { LoginFormTypes } from '@/app/types';
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -38,7 +39,7 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: LoginFormTypes) => {
     setLoading(true);
     setErrorMessage(null);
 
@@ -155,7 +156,7 @@ export default function LoginForm() {
           </div>
         </Button>
         <div className="text-center text-sm text-muted-foreground mt-4">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link href={routes.register} className="text-primary font-medium hover:underline">
             Sign Up
           </Link>

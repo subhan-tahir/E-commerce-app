@@ -1,12 +1,13 @@
 "use client";
 
 import { useAppSelector, useAppDispatch } from "@/lib/hooks/redux";
-import { addToCart, removeFromCart, clearCart } from "@/app/features/cartSlice";
-import { Product } from "@/types";
+import { addToCart, removeCart } from "@/app/features/cartSlice";
+import { CartItem, Product } from "@/types";
 import { Button } from "./button";
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
 import { Badge } from "./badge";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
+import Image from "next/image";
 
 export function ProfileReduxExample() {
   const cart = useAppSelector((state) => state.cart);
@@ -38,16 +39,16 @@ export function ProfileReduxExample() {
       ...product,
       quantity: 1
     };
-    dispatch(addToCart(cartItem));
+    dispatch(addToCart(cartItem as CartItem));
   };
 
   const handleRemoveFromCart = (productId: number) => {
-    dispatch(removeFromCart(productId));
+    dispatch(removeCart(productId));
   };
 
-  const handleClearCart = () => {
-    dispatch(clearCart());
-  };
+  // const handleClearCart = () => {
+  //   dispatch(clearCart());
+  // };
 
   return (
     <Card>
@@ -70,7 +71,7 @@ export function ProfileReduxExample() {
           </div>
           {cart.items.length > 0 && (
             <Button
-              onClick={handleClearCart}
+              // onClick={handleClearCart}
               variant="outline"
               size="sm"
               className="text-red-600 hover:text-red-700"
@@ -87,7 +88,9 @@ export function ProfileReduxExample() {
           {sampleProducts.map((product) => (
             <div key={product.id} className="flex items-center justify-between p-3 border rounded-lg">
               <div className="flex items-center gap-3">
-                <img
+                <Image
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
                   src={product.image}
                   alt={product.title}
                   className="w-12 h-12 rounded object-cover"
@@ -116,7 +119,9 @@ export function ProfileReduxExample() {
             {cart.items.map((item) => (
               <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
                 <div className="flex items-center gap-3">
-                  <img
+                  <Image
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                     src={item.image}
                     alt={item.title}
                     className="w-12 h-12 rounded object-cover"

@@ -1,3 +1,5 @@
+// app/api/auth/[...nextauth]/options.ts
+
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
@@ -5,7 +7,7 @@ import GoogleProvider from "next-auth/providers/google";
 import connectDB from "@/app/lib/mongodb";
 import userModel from "@/app/models/user.model";
 import bcrypt from "bcrypt";
-import { NextResponse } from "next/server";
+import { User } from "../types";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -40,19 +42,24 @@ export const authOptions: NextAuthOptions = {
           if (!isPasswordMatch) {
             throw new Error("Invalid credentials");
           }
-          console.log('User found:', user.isVerified);
+
           if (!user.isVerified) {
-          throw new Error(`User not verified. Please verify your email at /auth/verify-email?email=${encodeURIComponent(credentials.email)}`)
+            throw new Error(
+              `User not verified. Please verify your email at /auth/verify-email?email=${encodeURIComponent(
+                credentials.email
+              )}`
+            );
           }
 
           return {
             id: user._id.toString(),
-            name: user.username || user.email.split("@")[0],
+            username: user.username || user.email.split("@")[0],
             email: user.email,
-            profileImage: user.profileImage as string || "",
+            profileImage: user.profileImage || "",
             phone: user.phone || "",
             address: user.address || "",
-          };``
+            isVerified: user.isVerified,
+          } as User;
         } catch (error) {
           console.error("Authorize error:", error);
           throw new Error("Authentication failed");
@@ -69,31 +76,43 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
-    async jwt({ token, user }: { token: any; user?: any }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-        token.name = user.name;
-        token.profileImage = user.profileImage;
-        token.phone = user.phone;
-        token.address = user.address;
-      }
-      return token;
-    },
-    async session({ session, token }: { session: any; token: any }) {
+   async jwt({ token, user }) {
+  if (user) {
+    token.id = user.id;
+    token.email = user.email;
+
+    // Narrow to CustomUser before using custom fields
+    const customUser = user as User;
+
+    if (customUser.username) {
+      token.username = customUser.username;
+    }
+    token.profileImage = customUser.profileImage;
+    token.phone = customUser.phone;
+    token.address = customUser.address;
+    token.isVerified = customUser.isVerified;
+  }
+  return token;
+},
+
+    async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email;
-        session.user.name = token.name;
-        session.user.profileImage = token.profileImage || "";
+        session.user.username = token.username;
+        session.user.profileImage = token.profileImage;
         session.user.phone = token.phone || "";
         session.user.address = token.address || "";
+        session.user.isVerified = token.isVerified;
         session.accessToken = token.sub;
+
         try {
           await connectDB();
-          const user = await userModel.findById(token.id).select("username email phone address profileImage");
+          const user = await userModel
+            .findById(token.id)
+            .select("username email phone address profileImage isVerified");
           if (user) {
-            session.user.name = user.username || user.email.split("@")[0];
+            session.user.username = user.username || user.email.split("@")[0];
             session.user.email = user.email;
             session.user.phone = user.phone || "";
             session.user.address = user.address || "";

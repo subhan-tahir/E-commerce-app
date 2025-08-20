@@ -1,7 +1,5 @@
 
 import mongoose from "mongoose";
-import { verifyToken } from "../utils/authToken";
-import { Phetsarath } from "next/font/google";
 
 const userShema = new mongoose.Schema({
     username: {

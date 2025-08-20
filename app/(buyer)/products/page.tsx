@@ -22,7 +22,8 @@ const ProductsPage = () => {
             const productsData = await api.getProducts();
             setProducts(productsData);
         } catch (error) {
-            console.error("Failed to fetch products", error);
+            console.error("Failed to load products.", error);
+            setError("Failed to load products.");
         } finally {
             setLoading(false);
         }

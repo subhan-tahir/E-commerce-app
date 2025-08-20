@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { ContactFormTypes, Product } from '@/app/types';
-import { useSearchParams } from 'next/navigation';
-import { error } from 'console';
+import { ContactFormTypes, Product, RegisterFormTypes, UpdateUser } from '@/app/types';
+
 
 const API_BASE_URL = 'https://fakestoreapi.com';
 
@@ -49,7 +48,7 @@ export const api = {
       throw new Error('Failed to fetch product');
     }
   },
-  createUser: async (user: any) => {
+  createUser: async (user: RegisterFormTypes) => {
     try {
       const response = await axios.post(`/api/auth/register`, user);
 
@@ -77,7 +76,7 @@ export const api = {
       throw new Error('Failed to verify email');
     }
   },
-  updateUser: async ({ username, email, phone, address, accessToken }: any) => {
+  updateUser: async ({ username, email, phone, address, accessToken }: UpdateUser) => {
     try {
       const response = await axios.put(
         "/api/auth/update",
@@ -91,9 +90,11 @@ export const api = {
       );
       console.log("Update response:", response.data);
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating user:", error);
-      throw new Error(error.response?.data?.message || "Failed to update user");
+      if (error instanceof Error) {
+        throw error;
+      }
     }
   },
 uploadProfileImage:  async (formData: FormData, accessToken?: string) => {
@@ -120,8 +121,9 @@ uploadProfileImage:  async (formData: FormData, accessToken?: string) => {
     }
 
     return data;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("API error:", error);
+
     throw error;
   }
 },

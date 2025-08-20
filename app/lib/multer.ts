@@ -1,6 +1,6 @@
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 import path from "path";
-
+import {Request} from "express";
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = path.join(process.cwd(), "public/uploads/");
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter = (req: any, file: any, cb: multer.FileFilterCallback) => {
+const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
   const allowedTypes = ["image/jpeg", "image/png"];
   console.log("File mimetype:", file.mimetype);
   if (allowedTypes.includes(file.mimetype)) {

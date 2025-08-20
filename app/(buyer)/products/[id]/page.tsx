@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import ProductDetailSkeleton from "@/components/ui/product-detail-skeleton";
 import { Product } from "@/app/types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Star, ShoppingCart, Heart, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -22,7 +22,7 @@ const ProductDetailPage = () => {
     const [selectedImage, setSelectedImage] = useState<string>("");
     const [quantity, setQuantity] = useState(1);
 
-    const getProduct = async () => {
+    const getProduct = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
@@ -35,13 +35,13 @@ const ProductDetailPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [productId]);
 
     useEffect(() => {
         if (productId) {
             getProduct();
         }
-    }, [productId]);
+    }, [productId,getProduct]);
 
     const handleAddToCart = () => {
         // TODO: Implement add to cart functionality

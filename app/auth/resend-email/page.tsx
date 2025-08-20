@@ -5,7 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-export default function  resendEmailPage (){
+export default function  ResendEmailPage (){
     const navigate = useRouter();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -31,7 +31,7 @@ export default function  resendEmailPage (){
     return (
         <div>
             <h1>Resend Email</h1>
-            <p>If you haven't received the verification email, you can request a new one.</p>
+            <p>If you haven&apos;t received the verification email&apos;s you can request a new one.</p>
             <form onSubmit={(handleSubmit)} className="space-y-6">
                 <input type="email" name="email" placeholder="Enter your email" required className="input input-bordered w-full max-w-xs" />
                 <button type="submit" className="btn btn-primary w-full">Resend Verification Email</button>

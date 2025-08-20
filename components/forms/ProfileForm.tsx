@@ -26,6 +26,8 @@ import { useSession } from "next-auth/react";
 import { api } from "@/app/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import UploadForm from "@/components/UploadForm";
+import { UpdateUser, User } from "@/app/types";
+
 
 const ProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -46,7 +48,7 @@ const ProfileForm = () => {
 
 
   // ✅ Submit handler
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: Partial<User>) => {
     console.log("Form data:", data);
     try {
       const updateData = {
@@ -54,11 +56,11 @@ const ProfileForm = () => {
         email: data.email,
         phone: data.phone,
         address: data.address,
-        accessToken: (session as any)?.accessToken,
-        profileImage: (session?.user as any)?.profileImage,
+        // accessToken: (session as any)?.accessToken,
+        profileImage: (session?.user as User)?.profileImage,
       };
 
-      const response = await api.updateUser(updateData);
+      const response = await api.updateUser(updateData as UpdateUser);
       console.log("Update response:", response);
       if(response.status === 200) {
         toast.success(response.message || "Profile updated successfully");
@@ -80,9 +82,11 @@ const ProfileForm = () => {
 
       toast.success("Profile updated successfully");
       setIsEditing(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating profile:", error);
-      toast.error(error.message || "Failed to update profile");
+      if (error instanceof Error) {
+        toast.error(error.message || "Failed to update profile");
+      }
     }
   };
 
@@ -94,7 +98,7 @@ const ProfileForm = () => {
   useEffect(() => {
     if (session?.user) {
       form.reset({
-        username: session.user.name || "",
+        username: session.user.username || "",
         email: session.user.email || "",
         phone: session.user.phone || "",
         address: session.user.address || "",
@@ -197,6 +201,7 @@ const ProfileForm = () => {
                           disabled={!isEditing}
                           className="bg-gray-50"
                           {...field}
+                          value={field.value || ""}
                         />
                       </FormControl>
                       <FormMessage />
@@ -217,6 +222,7 @@ const ProfileForm = () => {
                           disabled={!isEditing}
                           className="bg-gray-50"
                           {...field}
+                          value={field.value || ""}
                         />
                       </FormControl>
                       <FormMessage />

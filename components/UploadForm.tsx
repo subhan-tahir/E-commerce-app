@@ -13,7 +13,6 @@ const UploadForm = () => {
 
     const form = useForm();
     const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-    const [uploadedImageUrl, setUploadedImageUrl] = React.useState<string | null>(null);
     const { update, data: session } = useSession();
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +56,7 @@ const UploadForm = () => {
             }
 
             // Upload image
-            const uploadRes = await api.uploadProfileImage(formData, session?.accessToken);
+            const uploadRes = await api.uploadProfileImage(formData, session?.accessToken as string);
             const uploadedImageUrl = uploadRes?.imageUrl;
 
             if (!uploadedImageUrl) {
@@ -71,9 +70,12 @@ const UploadForm = () => {
             form.resetField("profileImage");
 
             toast.success("Profile image updated successfully");
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Upload error:", error);
-            toast.error(`Error uploading image: ${error.message || "Unknown error"}`);
+            if (error instanceof Error) {
+                toast.error(`Error uploading image: ${error.message || "Unknown error"}`);
+            }
+
             setPreviewImage(session?.user.profileImage || defaultAvatar.src);
             setSelectedFile(null);
             form.resetField("profileImage");

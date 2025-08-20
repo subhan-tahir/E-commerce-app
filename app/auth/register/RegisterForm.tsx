@@ -18,11 +18,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { routes } from "@/app/lib/routes";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { api } from "@/app/lib/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ErrorMessage from "@/components/messages/ErrorMessage";
 import { useSearchParams } from "next/navigation";
 
@@ -63,9 +62,12 @@ export default function RegisterForm() {
       else {
         toast.error(response.message || "Registration failed");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log('Register error:', error.message);
+        toast.error(error.message);
+      }
 
-      console.log('Register error:', error.response);
       toast.error("Something went wrong. Please try again.");
     }
     finally {

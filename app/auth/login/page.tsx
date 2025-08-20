@@ -1,8 +1,5 @@
 
-
-import Image from 'next/image';
 import LoginForm from './LoginForm';
-import loginImage from '@/public/auth/login.png';
 import LoginRightBg from './LoginRightBg';
 export default function LoginPage() {
     return (

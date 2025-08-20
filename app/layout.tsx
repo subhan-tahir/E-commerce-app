@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import  AuthProvider  from "@/components/providers/AuthProvider";
 import "./globals.css";
-import Navbar from "@/components/ui/Navbar";
 import NextTopLoader from "nextjs-toploader";
 import { ReduxProvider } from "@/components/providers/ReduxProvider";
 import { Bounce, ToastContainer } from "react-toastify";

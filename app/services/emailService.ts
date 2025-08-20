@@ -6,7 +6,7 @@ interface EmailOptions {
   subject?: string;
   text?: string;
   html?: string;
-  [key: string]: any;
+  // [key: string]: any;
   resetToken?: string; // For reset password emails
   // Allow additional fields like verificationCode or resetToken
 }

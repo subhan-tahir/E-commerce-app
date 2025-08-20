@@ -1,11 +1,8 @@
 "use client"
-import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import { routes } from '@/app/lib/routes';
+import React  from 'react';
+
+import {  useSearchParams } from 'next/navigation';
+
 import VerifyForm from './VerifyForm';
 import emailbg from '@/public/auth/email-verify.jpg';
 import Image from 'next/image';
