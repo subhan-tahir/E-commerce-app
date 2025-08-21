@@ -8,7 +8,7 @@ export default function ContactUsPage() {
         <div className="min-h-screen flex items-center justify-center bg-[#f5f6fa] p-2  ">
             <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl flex overflow-hidden p-2">
                 {/* Left: Form */}
-                <div className="flex-1 flex flex-col justify-center  py-16 px-16">
+                <div className="flex-1 flex flex-col justify-center  py-16 md:px-16 px-4">
                     <div className="mb-8">
                         <div className="flex items-center space-x-2">
 

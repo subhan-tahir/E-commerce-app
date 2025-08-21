@@ -7,7 +7,7 @@ export default function RegisterPage() {
        <div className="min-h-screen flex items-center justify-center bg-[#f5f6fa] p-2  ">
             <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl flex overflow-hidden p-2">
                 {/* Left: Form */}
-                <div className="flex-1 flex flex-col justify-center  py-16 px-16">
+                <div className="flex-1 flex flex-col justify-center  py-16 md:px-16 px-4">
                     <div className="mb-8">
                         <span className="inline-flex items-center gap-2 text-primary font-semibold text-sm mb-4">
                             <span className="w-2 h-2 rounded-full bg-primary"></span>

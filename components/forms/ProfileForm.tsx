@@ -41,7 +41,7 @@ const ProfileForm = () => {
       email: "",
       phone: "",
       address: "",
-      image: "",
+      profileImage: "",
     },
   });
 
@@ -102,7 +102,7 @@ const ProfileForm = () => {
         email: session.user.email || "",
         phone: session.user.phone || "",
         address: session.user.address || "",
-        image: session.user.image || "",
+        profileImage: session.user.profileImage || "",
       });
     }
   }, [session, form]);//session mount when component mounts

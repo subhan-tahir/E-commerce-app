@@ -3,10 +3,10 @@ import path from "path";
 import {Request} from "express";
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // const uploadPath = path.join(process.cwd(), "public/uploads/");
-    // console.log("Multer destination:", uploadPath);
-    // cb(null, uploadPath);
-     cb(null, "/tmp"); 
+    const uploadPath = path.join(process.cwd(), "public/uploads/");
+    console.log("Multer destination:", uploadPath);
+    cb(null, uploadPath);
+    //  cb(null, "/tmp"); 
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);

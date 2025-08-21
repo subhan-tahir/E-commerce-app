@@ -76,31 +76,34 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
-   async jwt({ token, user }) {
-  if (user) {
-    token.id = user.id;
-    token.email = user.email;
 
-    // Narrow to CustomUser before using custom fields
-    const customUser = user as User;
+    async jwt({ token, user }) {
+      console.log("JWT Callback - token:",token);
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
 
-    if (customUser.username) {
-      token.username = customUser.username;
-    }
-    token.profileImage = customUser.profileImage;
-    token.phone = customUser.phone;
-    token.address = customUser.address;
-    token.isVerified = customUser.isVerified;
-  }
-  return token;
-},
+        // Narrow to CustomUser before using custom fields
+        const customUser = user as User;
+
+        if (customUser.username) {
+          token.username = customUser.username;
+        }
+        token.profileImage = customUser.profileImage;
+        token.picture = token.picture;
+        token.phone = customUser.phone;
+        token.address = customUser.address;
+        token.isVerified = customUser.isVerified;
+      }
+      return token;
+    },
 
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email;
-        session.user.username = token.username;
-        session.user.profileImage = token.profileImage;
+        session.user.username = token.username || token.name;
+        session.user.profileImage = token.profileImage || token.picture || "";
         session.user.phone = token.phone || "";
         session.user.address = token.address || "";
         session.user.isVerified = token.isVerified;

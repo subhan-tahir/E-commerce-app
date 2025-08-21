@@ -71,7 +71,16 @@ export default function LoginForm() {
       setLoading(false);
     }
   };
-
+const handleSignIn = async () => {
+    setLoading(true);
+    try {
+      await signIn('github', { callbackUrl: '/' }); // Redirect to homepage after sign-in
+    } catch (error) {
+      console.error('GitHub sign-in error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Form {...form}>
       {errorMessage && (
@@ -135,12 +144,12 @@ export default function LoginForm() {
           variant={"outline"}
           type="button"
           className="w-full mt-2  hover:opacity-80  text-black font-semibold rounded-lg py-4 text-base"
-          onClick={() => signIn('github')}
+          onClick={handleSignIn}
         >
 
           <div className="flex items-center justify-center gap-2">
             <Image src={githubicon} alt="GitHub Icon" width={20} height={20} />
-            Sign in with GitHub
+          {loading ? 'Signing in...' : 'Sign in with GitHub'}
           </div>
         </Button>
         <Button
