@@ -5,6 +5,7 @@ export interface Product {
   description: string;
   category: string;
   image: string;
+  discountPercentage: number; // Optional property for discount percentage
   rating: {
     rate: number;
     count: number;

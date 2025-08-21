@@ -15,6 +15,8 @@ import {
   DrawerTrigger 
 } from "@/components/ui/drawer";
 import { Filter, Grid, List } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 const HomeMain = () => {
       const [products, setProducts] = useState<Product[]>([]);
       const [categories, setCategories] = useState<string[]>([]);
@@ -85,6 +87,11 @@ const HomeMain = () => {
         // TODO: Implement wishlist functionality
       };
     
+      //wishlist items
+      const wishlistItems = useSelector((state: RootState) => state.cart.wishlistItems);
+      useEffect(() => {
+       console.log('wishlist items:', wishlistItems);
+      }, [wishlistItems]);
       const filteredProducts = selectedCategory 
         ? products.filter(product => product.category === selectedCategory)
         : products;
@@ -201,8 +208,8 @@ const HomeMain = () => {
                   <ProductCard
                     key={product.id}
                     product={product}
-                    onAddToCart={handleAddToCart}
-                    onAddToWishlist={handleAddToWishlist}
+                    onAddToCart={() => handleAddToCart(product)}
+                    onAddToWishlist={() => handleAddToWishlist(product)}
                   />
                 ))}
               </div>

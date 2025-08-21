@@ -1,21 +1,20 @@
 "use client";
 
-import React from 'react';
-import { Product } from '@/app/types';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Heart, ShoppingCart, Star } from 'lucide-react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '@/app/features/cartSlice';
-import { toggleWishlist } from '@/app/features/wishlistSlice';
-import { toast } from 'react-toastify';
-import { RootState } from '@/app/store';
-import Image from 'next/image';
-import noimage from '@/public/no-image.jpg';
-import { CartItem } from '@/types';
+import React from "react";
+import { Product, CartItem } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Heart, ShoppingCart, Star } from "lucide-react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, toggleWishlist } from "@/app/features/cartSlice"; // Import toggleWishlist from cartSlice
+import { toast } from "react-toastify";
+import { RootState } from "@/app/store";
+import Image from "next/image";
+import noimage from "@/public/no-image.jpg";
+
 interface ProductCardProps {
   product: Product;
   onAddToCart?: (product: Product) => void;
@@ -24,19 +23,19 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const dispatch = useDispatch();
-  const wishlist = useSelector((state: RootState) => state.wishlist.wishlistItems);
+  const wishlistItems = useSelector((state: RootState) => state.cart.wishlistItems) || [];
 
-  const isInWishlist = wishlist.some(item => item.id === Number(product.id));
+  const isInWishlist = wishlistItems.some((item) => item.id === Number(product.id));
 
-const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: Product) => {
     const cartItem: CartItem = {
       ...product,
       id: Number(product.id),
-      quantity: 1, // Default quantity
-      discountPercentage: 0, // Default discount
-      wishlist: isInWishlist, // Reflect wishlist status
+      quantity: 1,
+      discountPercentage: 0,
+      wishlist: isInWishlist,
     };
-    dispatch(addToCart(cartItem)); // No `as any` needed
+    dispatch(addToCart(cartItem));
     toast.success("Added to cart!");
   };
 
@@ -44,16 +43,12 @@ const handleAddToCart = (product: Product) => {
     const cartItem: CartItem = {
       ...product,
       id: Number(product.id),
-      quantity: 1, // Default quantity
-      discountPercentage: 0, // Default discount
-      wishlist: isInWishlist, // Reflect wishlist status
-    }
+      quantity: 1,
+      discountPercentage: 0,
+      wishlist: isInWishlist,
+    };
     dispatch(toggleWishlist(cartItem));
-    if (isInWishlist) {
-      toast.info(`Removed from wishlist`);
-    } else {
-      toast.success(`Added to wishlist!`);
-    }
+    toast[isInWishlist ? "info" : "success"](isInWishlist ? "Removed from wishlist" : "Added to wishlist!");
   };
 
   return (
@@ -65,13 +60,11 @@ const handleAddToCart = (product: Product) => {
       transition={{ duration: 0.7, delay: 0.2, ease: "easeInOut", type: "spring", stiffness: 100 }}
       viewport={{ once: true, amount: 0.8 }}
     >
-
-
       <Card className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-white">
         <CardHeader className="p-0 relative">
           <div className="relative h-48 bg-gray-50 rounded-t-lg overflow-hidden">
-            <Image 
-            sizes='(max-width: 768px) 100vw, 33vw'
+            <Image
+              sizes="(max-width: 768px) 100vw, 33vw"
               fill
               src={product.image || noimage}
               alt={product.title}
@@ -82,7 +75,7 @@ const handleAddToCart = (product: Product) => {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 bg-white/80 hover:bg-white shadow-sm"
-                onClick={() => handleToggleWishlist()}
+                onClick={handleToggleWishlist}
               >
                 <Heart
                   className={`h-4 w-4 ${isInWishlist ? "fill-red-500 text-red-500" : "text-gray-600"}`}
@@ -117,16 +110,10 @@ const handleAddToCart = (product: Product) => {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-1">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  <span className="text-sm font-medium text-gray-700">
-                    {product.rating.rate}
-                  </span>
-                  <span className="text-xs text-gray-500">
-                    ({product.rating.count})
-                  </span>
+                  <span className="text-sm font-medium text-gray-700">{product.rating.rate}</span>
+                  <span className="text-xs text-gray-500">({product.rating.count})</span>
                 </div>
-                <span className="text-lg font-bold text-[#7837ff]">
-                  ${product.price}
-                </span>
+                <span className="text-lg font-bold text-[#7837ff]">${product.price}</span>
               </div>
             </div>
           </Link>
@@ -142,10 +129,8 @@ const handleAddToCart = (product: Product) => {
           </div>
         </CardContent>
       </Card>
-
-
     </motion.div>
   );
 };
 
-export default ProductCard; 
+export default ProductCard;

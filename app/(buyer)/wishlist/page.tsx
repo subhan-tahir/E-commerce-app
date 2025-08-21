@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { toggleWishlist } from "@/app/features/wishlistSlice";
+import { toggleWishlist } from "@/app/features/cartSlice";
 import { toast } from "react-toastify";
 import EmptyCard from "@/components/empty-card";
 
@@ -22,7 +22,7 @@ import EmptyCard from "@/components/empty-card";
 
 const WhishListPage = () => {
 
-    const wishlistItems = useSelector((state: RootState) => state.wishlist.wishlistItems);
+    const wishlistItems = useSelector((state: RootState) => state.cart.wishlistItems);
 
     const dispatch = useDispatch();
 
@@ -96,7 +96,7 @@ const WhishListPage = () => {
                                             </CardHeader>
 
                                             <CardContent className="p-4 flex-1 flex flex-col">
-                                                <Link href={`/items/${item.id}`} className="flex-1 flex flex-col">
+                                                <Link href={`/products/${item.id}`} className="flex-1 flex flex-col">
                                                     <div className="mb-2">
                                                         <Badge variant="secondary" className="text-xs mb-2">
                                                             {item.category}

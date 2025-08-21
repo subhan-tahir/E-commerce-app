@@ -12,6 +12,11 @@ import { useParams } from "next/navigation";
 import { Star, ShoppingCart, Heart, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { CartItem } from "@/types";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, toggleWishlist } from "@/app/features/cartSlice";
+import { toast } from "react-toastify";
+import { RootState } from "@/app/store";
 const ProductDetailPage = () => {
     const params = useParams();
     const productId = params.id as string;
@@ -21,7 +26,9 @@ const ProductDetailPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [selectedImage, setSelectedImage] = useState<string>("");
     const [quantity, setQuantity] = useState(1);
+        const wishlistItems = useSelector((state: RootState) => state.cart.wishlistItems);
 
+const dispatch = useDispatch();
     const getProduct = useCallback(async () => {
         try {
             setLoading(true);
@@ -41,18 +48,25 @@ const ProductDetailPage = () => {
         if (productId) {
             getProduct();
         }
-    }, [productId,getProduct]);
+    }, [productId, getProduct]);
 
-    const handleAddToCart = () => {
-        // TODO: Implement add to cart functionality
-        console.log("Add to cart:", product, "Quantity:", quantity);
+   const handleAddToCart = (product: Product) => {
+     const cartItem: CartItem = {
+       ...product,
+       id: Number(product.id),
+       quantity: 1,
+       discountPercentage: 0,
+       
+     };
+     dispatch(addToCart(cartItem));
+     toast.success("Added to cart!");
+   };
 
-    };
-
-    const handleAddToWishlist = () => {
-        // TODO: Implement add to wishlist functionality
-        console.log("Add to wishlist:", product);
-    };
+    const handleToggleWishlist = (product: CartItem) => {
+          const isInWishlist = wishlistItems.some(item => item.id === product.id);
+          dispatch(toggleWishlist(product));
+          toast.info(isInWishlist ? `Removed from wishlist` : `Added to wishlist`);
+      };
 
     const handleQuantityChange = (newQuantity: number) => {
         if (newQuantity >= 1 && newQuantity <= (product?.stock || 1)) {
@@ -189,6 +203,7 @@ const ProductDetailPage = () => {
                                 Brand: {product.brand}
                             </span>
                         </div>
+                       
                     </div>
 
                     {/* Description */}
@@ -227,21 +242,30 @@ const ProductDetailPage = () => {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={handleAddToWishlist}
+                            onClick={() => handleToggleWishlist(product)}
                                 className="h-10 w-10 border"
                             >
                                 <Heart className="h-5 w-5" />
                             </Button>
                         </div>
 
-                        <Button
+                        {/* <Button
                             className="w-full bg-[#7837ff] hover:bg-[#6636c7] text-white h-12"
                             onClick={handleAddToCart}
                             disabled={product.stock === 0}
                         >
                             <ShoppingCart className="h-5 w-5 mr-2" />
                             {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
-                        </Button>
+                        </Button> */}
+                         <div className="flex items-center gap-2 mt-3">
+                            <Button
+                                className="flex-1 bg-[#7837ff] hover:bg-[#6636c7] text-white"
+                                onClick={() => handleAddToCart(product)}
+                            >
+                                <ShoppingCart className="h-4 w-4 mr-2" />
+                                Add to Cart
+                            </Button>
+                        </div>
                     </div>
 
                     {/* Product Details */}

@@ -22,23 +22,16 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-
   const { data: session, status } = useSession();
-  useEffect(() => {
-    console.log('session...', session, status);
-  }, [session, status]);
+
   //select item from slice
   // const items = useSelector((state: RootState) => state.cart.items);
-  const cartQuantity = useSelector((state: RootState) =>
-    state.cart.items.reduce((acc, item) => acc + item.quantity, 0)
-  );
-  const wishlistItems = useSelector((state: RootState) => state.wishlist.wishlistItems);
-  console.log('wishlist items', wishlistItems)
-  const wishlistQuantity = useSelector((state: RootState) =>
-    state.wishlist.wishlistItems.reduce((acc, item) => acc + item.quantity, 0)
-  );
+  const cartItems = useSelector((state: RootState) => state.cart.items) || [];
+  const wishlistItems = useSelector((state: RootState) => state.cart.wishlistItems) || [];
 
-  
+  const cartQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const wishlistQuantity = wishlistItems.reduce((acc, item) => acc + item.quantity, 0);
+
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -71,6 +64,11 @@ const Navbar = () => {
       href: routes.contact,
     }
   ];
+  useEffect(() => {
+    console.log("session...", session, status);
+    console.log("cart quantity changed:", cartQuantity);
+    console.log("wishlist items", wishlistItems);
+  }, [session, status, cartQuantity, wishlistItems]);
   const handleLogout = async () => {
     try {
       await signOut({ callbackUrl: '/auth/login' });

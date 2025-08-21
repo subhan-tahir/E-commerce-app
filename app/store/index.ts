@@ -1,29 +1,21 @@
-// store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import cartReducer from "../features/cartSlice";
-import wishlistReducer from "../features/wishlistSlice";
-import { loadCartFromStorage, loadWishlistFromStorage, saveCartToStorage, saveWishlistToStorage } from "@/app/utils/cartFromLocalStorage";
+import cartReducer from "@/app/features/cartSlice";
+import { loadCartFromStorage, loadWishlistFromStorage } from "@/app/utils/cartFromLocalStorage";
 
 const preloadedState = {
-  cart: loadCartFromStorage(),
-  wishlist: loadWishlistFromStorage(), // load cart items
+  cart: {
+    items: loadCartFromStorage() || [],
+    wishlistItems: loadWishlistFromStorage() || [],
+    total: 0,
+  },
 };
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
-    wishlist: wishlistReducer, // Add wishlist reducer
-
   },
   preloadedState,
 });
 
-store.subscribe(() => {
-  saveCartToStorage(store.getState().cart.items); // Save on every update
-});
-
-store.subscribe(()=>{
-  saveWishlistToStorage(store.getState().wishlist.items);
-})
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
