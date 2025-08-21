@@ -41,7 +41,7 @@ declare module "next-auth" {
     id: string;
     username?: string | null;
     email?: string | null;
-    profileImage?: string | null;
+    image?: string | null;
     phone?: string | null;
     address?: string | null;
     isVerified?: boolean;
@@ -52,7 +52,7 @@ declare module "next-auth" {
       id: string;
       username?: string | null;
       email?: string | null;
-      profileImage?: string | null;
+      image?: string | null;
       phone?: string | null;
       address?: string | null;
       isVerified?: boolean;
@@ -66,7 +66,7 @@ declare module "next-auth/jwt" {
     id: string;
     username?: string | null;
     email?: string | null;
-    profileImage?: string | null;
+    image?: string | null;
     phone?: string | null;
     address?: string | null;
     isVerified?: boolean;
@@ -119,7 +119,7 @@ export type UpdateUser = {
   email: string;
   phone?: string | null;
   address?: string | null;
-  profileImage?: string | null;
+  image?: string | null;
   accessToken?: string | null;
 };
 
