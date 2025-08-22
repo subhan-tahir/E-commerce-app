@@ -3,9 +3,9 @@ import path from "path";
 import {Request} from "express";
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(process.cwd(), "public/uploads/");
-    console.log("Multer destination:", uploadPath);
-    cb(null, uploadPath);
+    // const uploadPath = path.join(process.cwd(), "public/uploads/");
+    // console.log("Multer destination:", uploadPath);
+    cb(null, "/tmp");
     //  cb(null, "/tmp"); 
   },
   filename: (req, file, cb) => {

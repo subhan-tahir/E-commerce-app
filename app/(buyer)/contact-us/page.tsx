@@ -1,7 +1,12 @@
 
 import ContactForm from "./ContactForm";
 import ContactLeftBg from "./ContactLeftBg";
+import { Metadata } from 'next';
 
+export const metadata:Metadata = {
+    title: "Contact Us",
+    description: "Access your E-store account to manage orders, track shipments, and enjoy personalized shopping experiences. Log in now to explore exclusive deals and offers!",
+}
 export default function ContactUsPage() {
 
     return (

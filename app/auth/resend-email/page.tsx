@@ -4,7 +4,12 @@ import { routes } from "@/app/lib/routes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { Metadata } from 'next';
 
+export const metadata:Metadata = {
+    title: "Resend Email",
+    description: "Access your E-store account to manage orders, track shipments, and enjoy personalized shopping experiences. Log in now to explore exclusive deals and offers!",
+}
 export default function  ResendEmailPage (){
     const navigate = useRouter();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

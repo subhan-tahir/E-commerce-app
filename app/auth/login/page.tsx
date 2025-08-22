@@ -1,7 +1,14 @@
 
 import LoginForm from './LoginForm';
 import LoginRightBg from './LoginRightBg';
+import { Metadata } from 'next';
+
+export const metadata:Metadata = {
+    title: "Login",
+    description: "Access your E-store account to manage orders, track shipments, and enjoy personalized shopping experiences. Log in now to explore exclusive deals and offers!",
+}
 export default function LoginPage() {
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#f5f6fa] p-2  ">
             <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl flex overflow-hidden p-2">

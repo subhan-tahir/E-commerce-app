@@ -1,6 +1,12 @@
 
 import RegisterForm from "../register/RegisterForm";
 import RegisterRightBg from "./RegisterRightBg";
+import { Metadata } from 'next';
+
+export const metadata:Metadata = {
+    title: "Register",
+    description: "Access your E-store account to manage orders, track shipments, and enjoy personalized shopping experiences. Log in now to explore exclusive deals and offers!",
+}
 export default function RegisterPage() {
 
     return (
