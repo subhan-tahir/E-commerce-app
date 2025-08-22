@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button";
 import HomeMain from "@/components/main/HomeMain";
 
+export const metadata = {
+  title: "E-store",
+  description: "Discover amazing products at unbeatable prices",
+};
 const HomePage = () => {
-
+// add metadata for the home page
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}

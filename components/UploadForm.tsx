@@ -105,6 +105,7 @@ const UploadForm = () => {
                         <Image
                             width={96}
                             height={96}
+
                             src={previewImage || defaultAvatar}
                             alt="Profile"
                             className="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
