@@ -71,16 +71,16 @@ export default function LoginForm() {
       setLoading(false);
     }
   };
-const handleSignIn = async () => {
-    setLoading(true);
-    try {
-      await signIn('github', { callbackUrl: '/' }); // Redirect to homepage after sign-in
-    } catch (error) {
-      console.error('GitHub sign-in error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+// const handleSignIn = async () => {
+//     setLoading(true);
+//     try {
+//       await signIn('github', { callbackUrl: '/' }); // Redirect to homepage after sign-in
+//     } catch (error) {
+//       console.error('GitHub sign-in error:', error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
   return (
     <Form {...form}>
       {errorMessage && (
@@ -140,11 +140,12 @@ const handleSignIn = async () => {
           {loading ? 'Signing In...' : 'Sign In'}
         </Button>
         <Separator className="" />
+        {/*Oauth buttons */}
         <Button
           variant={"outline"}
           type="button"
           className="w-full mt-2  hover:opacity-80  text-black font-semibold rounded-lg py-4 text-base"
-          onClick={handleSignIn}
+          onClick={() => signIn('github')}
         >
 
           <div className="flex items-center justify-center gap-2">

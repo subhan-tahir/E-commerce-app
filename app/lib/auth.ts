@@ -77,8 +77,9 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
 
-    async jwt({ token, user }) {
-      console.log("JWT Callback - token:",token);
+    async jwt({ token, user, account }) {
+      console.log('provider ------', account)
+      console.log("JWT Callback - token:", token);
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -94,11 +95,19 @@ export const authOptions: NextAuthOptions = {
         token.phone = customUser.phone;
         token.address = customUser.address;
         token.isVerified = customUser.isVerified;
+
+      }
+      if (account) {
+        token.provider = account.provider; // github, google, credentials, etc.
       }
       return token;
     },
 
     async session({ session, token }) {
+      console.log("Session Callback - token:", token);
+
+      console.log('provider in session ------', token.provider)
+      session.provider = token.provider;
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email;
@@ -108,7 +117,6 @@ export const authOptions: NextAuthOptions = {
         session.user.address = token.address || "";
         session.user.isVerified = token.isVerified;
         session.accessToken = token.sub;
-
         try {
           await connectDB();
           const user = await userModel

@@ -62,10 +62,10 @@ const ProfileForm = () => {
 
       const response = await api.updateUser(updateData as UpdateUser);
       console.log("Update response:", response);
-      if(response.status === 200) {
+      if (response.status === 200) {
         toast.success(response.message || "Profile updated successfully");
       }
-      if (response.status === 400){
+      if (response.status === 400) {
         toast.error("Failed to update profile: " + response.message);
       };
 
@@ -94,6 +94,8 @@ const ProfileForm = () => {
     setIsEditing(false);
     form.reset();
   };
+
+  const isGithubLogin = session?.provider;
   // ✅ Prefill form when session changes
   useEffect(() => {
     if (session?.user) {
@@ -116,30 +118,36 @@ const ProfileForm = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Profile Information</CardTitle>
-                  <CardDescription>Update your personal information</CardDescription>
+                 { !isGithubLogin && <CardDescription>Update your personal information</CardDescription>} 
                 </div>
-                {!isEditing ? (
-                  <Button
-                    type="button"
-                    onClick={() => setIsEditing(true)}
-                    variant="outline"
-                    className="text-[#7837ff] border-[#7837ff] hover:bg-[#7837ff] hover:text-white"
-                  >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
-                  </Button>
-                ) : (
-                  <div className="flex gap-2">
-                    {/* ✅ Submit works now */}
-                    <Button type="submit" className="bg-[#7837ff] hover:bg-[#6636c7]">
-                      <Save className="h-4 w-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button type="button" onClick={handleCancel} variant="outline">
-                      <X className="h-4 w-4 mr-2" />
-                      Cancel
-                    </Button>
-                  </div>
+                {
+                  !isGithubLogin && (
+                  <>
+
+                    {!isEditing ? (
+                      <Button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        variant="outline"
+                        className="text-[#7837ff] border-[#7837ff] hover:bg-[#7837ff] hover:text-white"
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit
+                      </Button>
+                    ) : (
+                      <div className="flex gap-2">
+                        {/* ✅ Submit works now */}
+                        <Button type="submit" className="bg-[#7837ff] hover:bg-[#6636c7]">
+                          <Save className="h-4 w-4 mr-2" />
+                          Save
+                        </Button>
+                        <Button type="button" onClick={handleCancel} variant="outline">
+                          <X className="h-4 w-4 mr-2" />
+                          Cancel
+                        </Button>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </CardHeader>

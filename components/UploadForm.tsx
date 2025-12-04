@@ -82,7 +82,7 @@ const UploadForm = () => {
             form.resetField("profileImage");
         }
     };
-
+    const isGithubLogin = session?.provider === 'github';
     useEffect(() => {
         if (session?.user?.profileImage) {
             setPreviewImage(session.user.profileImage);
@@ -96,7 +96,10 @@ const UploadForm = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <CardTitle>Profile Image</CardTitle>
-                            <CardDescription>Update your profile image</CardDescription>
+                            {
+                                isGithubLogin ? null :
+                                    <CardDescription>Update your profile image</CardDescription>
+                            }
                         </div>
                     </div>
                 </CardHeader>
@@ -111,19 +114,33 @@ const UploadForm = () => {
                             className="w-24 h-24 rounded-full object-cover border-2 border-gray-300"
                         />
 
-                        <label className="absolute bottom-0 right-0 bg-secondary p-1 rounded-full cursor-pointer">
-                            <Upload className="text-white w-4 h-4" />
-                            <input
-                                type="file"
-                                accept="image/jpeg,image/png"
-                                className="hidden"
-                                name="profileImage"
-                                onChange={handleFileChange}
-                            />
-                        </label>
 
+                        {
+                            !isGithubLogin && (
+
+                                <>
+                                    <label className="absolute bottom-0 right-0 bg-secondary p-1 rounded-full cursor-pointer">
+
+                                        <Upload className="text-white w-4 h-4" />
+                                        <input
+                                            type="file"
+                                            accept="image/jpeg,image/png"
+                                            className="hidden"
+                                            name="profileImage"
+                                            onChange={handleFileChange}
+                                        />
+                                    </label>
+
+                                </>
+                            )}
                     </div>
-                    <p className="text-sm text-gray-500">Allowed: JPG, PNG (Max 2MB)</p>
+                    {
+                        !isGithubLogin && (
+                            <p className="text-sm text-gray-500">Allowed: JPG, PNG (Max 2MB)</p>
+
+                        )
+                    }
+
                 </div>
             </Card>
             <Button type="submit" className="bg-secondary text-white px-4 py-2 rounded w-full" disabled={!previewImage || !selectedFile}>

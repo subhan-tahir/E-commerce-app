@@ -58,6 +58,7 @@ declare module "next-auth" {
       isVerified?: boolean;
     };
     accessToken?: string | null;
+    provider?: string | null | undefined; 
   }
 }
 
@@ -70,6 +71,7 @@ declare module "next-auth/jwt" {
     phone?: string | null;
     address?: string | null;
     isVerified?: boolean;
+    provider?: string | null;
   }
 }
 
@@ -101,6 +103,7 @@ export type ResetPasswordFormTypes = {
 
 // ---------- DB User Types ----------
 export type User = {
+
   id: string;
   username: string;
   email: string;
@@ -112,6 +115,7 @@ export type User = {
   phone?: string | null;
   address?: string | null;
   isVerified?: boolean;
+  provider?: string | null;
 };
 
 export type UpdateUser = {

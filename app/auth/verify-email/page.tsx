@@ -2,16 +2,15 @@
 import React, { useEffect } from 'react';
 
 import { useSearchParams } from 'next/navigation';
-
 import VerifyForm from './VerifyForm';
 import emailbg from '@/public/auth/email-verify.jpg';
 import Image from 'next/image';
-import { Metadata } from 'next';
+// import { Metadata } from 'next';
 
-export const metadata:Metadata = {
-    title: "Verify Email",
-    description: "Access your E-store account to manage orders, track shipments, and enjoy personalized shopping experiences. Log in now to explore exclusive deals and offers!",
-}
+// export const metadata:Metadata = {
+//     title: "Verify Email",
+//     description: "Access your E-store account to manage orders, track shipments, and enjoy personalized shopping experiences. Log in now to explore exclusive deals and offers!",
+// }
 export default function VerifyEmailPage() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');

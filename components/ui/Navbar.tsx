@@ -189,6 +189,7 @@ const Navbar = () => {
                 </div>
 
               ) : (
+                
                 <div className="hidden md:flex items-center space-x-4">
                   <Link href={routes.login} className=" hover:text-scondary hover:bg-secondary transition-colors bg-primary text-white px-6 py-2 rounded-full">
                     Login
