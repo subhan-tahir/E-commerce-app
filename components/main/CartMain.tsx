@@ -81,7 +81,7 @@
 "use client";
 
 import { RootState } from "@/app/store";
-import { CartItem } from "@/types";
+// import { CartItem } from "@/types";
 import { Trash, Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";

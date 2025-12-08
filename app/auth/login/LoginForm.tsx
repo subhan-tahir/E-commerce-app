@@ -24,7 +24,7 @@ import { signIn } from 'next-auth/react';
 import { Separator } from '@/components/ui/separator';
 // import githubicon from "@/public/icons/github.png";
 // import googleicon from "@/public/icons/search.png";
-import Image from 'next/image';
+// import Image from 'next/image';
 import { LoginFormTypes } from '@/app/types';
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
