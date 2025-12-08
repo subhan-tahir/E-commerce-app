@@ -22,8 +22,8 @@ import { loginSchema } from '@/app/lib/schemas/auth-schema';
 import { toast } from 'react-toastify';
 import { signIn } from 'next-auth/react';
 import { Separator } from '@/components/ui/separator';
-import githubicon from "@/public/icons/github.png";
-import googleicon from "@/public/icons/search.png";
+// import githubicon from "@/public/icons/github.png";
+// import googleicon from "@/public/icons/search.png";
 import Image from 'next/image';
 import { LoginFormTypes } from '@/app/types';
 export default function LoginForm() {
@@ -48,12 +48,12 @@ export default function LoginForm() {
         redirect: false,
         email: data.email.trim().toLowerCase(), // Normalize email
         password: data.password,
-        
+
       });
-      
+
       console.log('Login result:', result);
-      if(result?.ok){
-        
+      if (result?.ok) {
+
         toast.success('Login successful');
       }
       if (result?.error) {
@@ -62,7 +62,7 @@ export default function LoginForm() {
         form.reset();
         router.push(routes.home);
         console.log('Login successful, redirecting to home');
-        
+
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -71,22 +71,23 @@ export default function LoginForm() {
       setLoading(false);
     }
   };
-// const handleSignIn = async () => {
-//     setLoading(true);
-//     try {
-//       await signIn('github', { callbackUrl: '/' }); // Redirect to homepage after sign-in
-//     } catch (error) {
-//       console.error('GitHub sign-in error:', error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+  // const handleSignIn = async () => {
+  //     setLoading(true);
+  //     try {
+  //       await signIn('github', { callbackUrl: '/' }); // Redirect to homepage after sign-in
+  //     } catch (error) {
+  //       console.error('GitHub sign-in error:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
   return (
+    <>
     <Form {...form}>
       {errorMessage && (
         <ErrorMessage
           message={errorMessage}
-           setErrorMessage={() => setErrorMessage('')}
+          setErrorMessage={() => setErrorMessage('')}
           className="mb-4"
         />
       )}
@@ -140,7 +141,17 @@ export default function LoginForm() {
           {loading ? 'Signing In...' : 'Sign In'}
         </Button>
         <Separator className="" />
+        
+        <div className="text-center text-sm text-muted-foreground mt-4">
+          Don&apos;t have an account?{' '}
+          <Link href={routes.register} className="text-primary font-medium hover:underline">
+            Sign Up
+          </Link>
+        </div>
+      </form>
+    </Form>
         {/*Oauth buttons */}
+        <div className='space-y-3 mt-4'>
         <Button
           variant={"outline"}
           type="button"
@@ -149,8 +160,8 @@ export default function LoginForm() {
         >
 
           <div className="flex items-center justify-center gap-2">
-            <Image src={githubicon} alt="GitHub Icon" width={20} height={20} />
-          {loading ? 'Signing in...' : 'Sign in with GitHub'}
+            {/* <Image src={githubicon} alt="GitHub Icon" width={20} height={20} /> */}
+            {loading ? 'Signing in...' : 'Sign in with GitHub'}
           </div>
         </Button>
         <Button
@@ -161,17 +172,12 @@ export default function LoginForm() {
         >
 
           <div className="flex items-center justify-center gap-2">
-            <Image src={googleicon} alt="GitHub Icon" width={20} height={20} />
+            {/* <Image src={googleicon} alt="GitHub Icon" width={20} height={20} /> */}
             Sign in with Google
           </div>
         </Button>
-        <div className="text-center text-sm text-muted-foreground mt-4">
-          Don&apos;t have an account?{' '}
-          <Link href={routes.register} className="text-primary font-medium hover:underline">
-            Sign Up
-          </Link>
+
         </div>
-      </form>
-    </Form>
+        </>
   );
 }

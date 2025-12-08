@@ -95,7 +95,7 @@ const ProfileForm = () => {
     form.reset();
   };
 
-  const isGithubLogin = session?.provider;
+  const isGithubLogin = session?.provider === "github";
   // ✅ Prefill form when session changes
   useEffect(() => {
     if (session?.user) {
@@ -121,9 +121,8 @@ const ProfileForm = () => {
                  { !isGithubLogin && <CardDescription>Update your personal information</CardDescription>} 
                 </div>
                 {
-                  !isGithubLogin && (
-                  <>
-
+                  isGithubLogin ? null : 
+                 <>
                     {!isEditing ? (
                       <Button
                         type="button"
@@ -148,7 +147,7 @@ const ProfileForm = () => {
                       </div>
                     )}
                   </>
-                )}
+                }
               </div>
             </CardHeader>
 

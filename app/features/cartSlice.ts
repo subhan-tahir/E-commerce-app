@@ -64,9 +64,27 @@ export const cartSlice = createSlice({
       state.wishlistItems = action.payload;
       saveWishlistToStorage(state.wishlistItems);
     },
+    increaseQuantity: (state, action: PayloadAction<number>) => {
+  const item = state.items.find((i) => i.id === action.payload);
+  if (item) {
+    item.quantity += 1;
+  }
+  state.total = state.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  saveCartToStorage(state.items);
+},
+
+decreaseQuantity: (state, action: PayloadAction<number>) => {
+  const item = state.items.find((i) => i.id === action.payload);
+  if (item && item.quantity > 1) {
+    item.quantity -= 1;
+  }
+  state.total = state.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  saveCartToStorage(state.items);
+},
+
   },
 });
 
-export const { addToCart, removeCart, addToWishlist, removeFromWishlist, toggleWishlist, setCart, setWishlist } = cartSlice.actions;
+export const { addToCart, decreaseQuantity,increaseQuantity, removeCart, addToWishlist, removeFromWishlist, toggleWishlist, setCart, setWishlist } = cartSlice.actions;
 
 export default cartSlice.reducer;
