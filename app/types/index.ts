@@ -58,7 +58,7 @@ declare module "next-auth" {
       isVerified?: boolean;
     };
     accessToken?: string | null;
-    provider?: string | null | undefined; 
+    provider?: string | null | undefined;
   }
 }
 
@@ -139,4 +139,14 @@ export type ContactFormTypes = {
   fullName: string;
   email: string;
   message: string;
+};
+
+export type ShippingFormTypes = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  postalCode: string;
 };

@@ -5,7 +5,7 @@ import { Product, CartItem } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, ShoppingCart, Star } from "lucide-react";
+import {ShoppingCart, Star } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,8 @@ import { toast } from "react-toastify";
 import { RootState } from "@/app/store";
 import Image from "next/image";
 import noimage from "@/public/no-image.jpg";
+import ShareModal from "../shareProduct/ShareModal";
+import FavouriteButton from "./favouriteButton";
 
 interface ProductCardProps {
   product: Product;
@@ -39,17 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     toast.success("Added to cart!");
   };
 
-  const handleToggleWishlist = () => {
-    const cartItem: CartItem = {
-      ...product,
-      id: Number(product.id),
-      quantity: 1,
-      discountPercentage: 0,
-      wishlist: isInWishlist,
-    };
-    dispatch(toggleWishlist(cartItem));
-    toast[isInWishlist ? "info" : "success"](isInWishlist ? "Removed from wishlist" : "Added to wishlist!");
-  };
+
 
   return (
     <motion.div
@@ -71,16 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               className="object-contain h-full w-full p-4 group-hover:scale-105 transition-transform duration-300"
             />
             <div className="absolute top-2 right-2 flex gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 bg-white/80 hover:bg-white shadow-sm"
-                onClick={handleToggleWishlist}
-              >
-                <Heart
-                  className={`h-4 w-4 ${isInWishlist ? "fill-red-500 text-red-500" : "text-gray-600"}`}
-                />
-              </Button>
+          <FavouriteButton  product={product}/>
             </div>
             {product.discountPercentage > 0 && (
               <Badge className="absolute top-2 left-2 bg-red-500 text-white">
@@ -98,11 +81,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </Badge>
             </div>
 
-            <h3 className="font-semibold text-sm mb-2 line-clamp-2 min-h-[2.5rem] text-gray-900">
+            <h3 className="font-semibold text-sm mb-2 line-clamp-2 min-h-10 text-gray-900">
               {product.title}
             </h3>
 
-            <p className="text-gray-500 text-xs mb-3 line-clamp-2 min-h-[2rem]">
+            <p className="text-gray-500 text-xs mb-3 line-clamp-2">
               {product.description}
             </p>
 
@@ -126,6 +109,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <ShoppingCart className="h-4 w-4 mr-2" />
               Add to Cart
             </Button>
+          <ShareModal product={product} />
           </div>
         </CardContent>
       </Card>

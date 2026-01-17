@@ -27,7 +27,8 @@ import { Separator } from '@/components/ui/separator';
 // import Image from 'next/image';
 import { LoginFormTypes } from '@/app/types';
 export default function LoginForm() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<"credentials" | "github" | null>(null);
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
   const form = useForm({
@@ -40,7 +41,7 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormTypes) => {
-    setLoading(true);
+    setLoading('credentials');
     setErrorMessage(null);
 
     try {
@@ -68,103 +69,99 @@ export default function LoginForm() {
       console.error('Login error:', error);
       setErrorMessage('An unexpected error occurred');
     } finally {
-      setLoading(false);
+      setLoading(null);
     }
   };
-  // const handleSignIn = async () => {
-  //     setLoading(true);
-  //     try {
-  //       await signIn('github', { callbackUrl: '/' }); // Redirect to homepage after sign-in
-  //     } catch (error) {
-  //       console.error('GitHub sign-in error:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  const handleSignIn = async () => {
+    setLoading('github');
+    try {
+      await signIn('github'); // Redirect to homepage after sign-in
+    } catch (error) {
+      console.error('GitHub sign-in error:', error);
+    } finally {
+      setLoading(null);
+    }
+  };
   return (
     <>
-    <Form {...form}>
-      {errorMessage && (
-        <ErrorMessage
-          message={errorMessage}
-          setErrorMessage={() => setErrorMessage('')}
-          className="mb-4"
-        />
-      )}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="stanley@gmail.com" type="email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="Password" type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex items-center justify-between text-sm">
+      <Form {...form}>
+        {errorMessage && (
+          <ErrorMessage
+            message={errorMessage}
+            setErrorMessage={() => setErrorMessage('')}
+            className="mb-4"
+          />
+        )}
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
-            name="remember"
+            name="email"
             render={({ field }) => (
-              <div className="flex items-center gap-2">
-                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                <FormLabel>Remember me</FormLabel>
-              </div>
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="stanley@gmail.com" type="email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
-          <Link href={routes.forgetPassword} className="text-primary hover:underline">
-            Forgot Password?
-          </Link>
-        </div>
-        <Button
-          type="submit"
-          className="w-full mt-2 bg-primary hover:bg-secondary text-white font-semibold rounded-lg py-3 text-base shadow-md"
-          disabled={loading}
-        >
-          {loading ? 'Signing In...' : 'Sign In'}
-        </Button>
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="Password" type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex items-center justify-between text-sm">
+            <FormField
+              control={form.control}
+              name="remember"
+              render={({ field }) => (
+                <div className="flex items-center gap-2">
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                  <FormLabel>Remember me</FormLabel>
+                </div>
+              )}
+            />
+            <Link href={routes.forgetPassword} className="text-primary hover:underline">
+              Forgot Password?
+            </Link>
+          </div>
+          <Button
+            type="submit"
+            className="w-full mt-2 bg-primary hover:bg-secondary text-white font-semibold rounded-lg py-3 text-base shadow-md"
+            disabled={loading === 'credentials'}
+          >
+            {loading === 'credentials' ? 'Signing In...' : 'Sign In'}
+          </Button>
+
+
+
+        </form>
+      </Form>
+      {/*Oauth buttons */}
+      <div className='space-y-3 mt-4'>
         <Separator className="" />
-        
-        <div className="text-center text-sm text-muted-foreground mt-4">
-          Don&apos;t have an account?{' '}
-          <Link href={routes.register} className="text-primary font-medium hover:underline">
-            Sign Up
-          </Link>
-        </div>
-      </form>
-    </Form>
-        {/*Oauth buttons */}
-        <div className='space-y-3 mt-4'>
         <Button
           variant={"outline"}
           type="button"
           className="w-full mt-2  hover:opacity-80  text-black font-semibold rounded-lg py-4 text-base"
-          onClick={() => signIn('github')}
+          onClick={() => handleSignIn()}
         >
 
           <div className="flex items-center justify-center gap-2">
             {/* <Image src={githubicon} alt="GitHub Icon" width={20} height={20} /> */}
-            {loading ? 'Signing in...' : 'Sign in with GitHub'}
+            {loading === 'github' ? 'Signing in...' : 'Sign in with GitHub'}
           </div>
         </Button>
-        <Button
+        {/* <Button
           variant={"outline"}
           type="button"
           className="w-full mt-2  hover:opacity-80  text-black font-semibold rounded-lg py-4 text-base"
@@ -172,12 +169,17 @@ export default function LoginForm() {
         >
 
           <div className="flex items-center justify-center gap-2">
-            {/* <Image src={googleicon} alt="GitHub Icon" width={20} height={20} /> */}
+            {/* <Image src={googleicon} alt="GitHub Icon" width={20} height={20} /> 
             Sign in with Google
           </div>
-        </Button>
-
+        </Button> */}
+        <div className="text-center text-sm text-muted-foreground mt-4">
+          Don&apos;t have an account?{' '}
+          <Link href={routes.register} className="text-primary font-medium hover:underline">
+            Sign Up
+          </Link>
         </div>
-        </>
+      </div>
+    </>
   );
 }

@@ -36,3 +36,14 @@ export const contactFormSchema = Yup.object().shape({
     email: Yup.string().email("Please enter a valid email address").required("Please enter your email address"),
     message: Yup.string().required("Please enter your message"),
 }) as Yup.ObjectSchema<ContactFormTypes>;
+
+export const shippingFormSchema = Yup.object().shape({
+    firstName: Yup.string().required("Please enter your first name"),
+    lastName: Yup.string().required("Please enter your last name"),
+    email: Yup.string().email("Please enter a valid email address").required("Please enter your email address"),
+    phone: Yup.string().required("Please enter your phone number"),
+    address: Yup.string().required("Please enter your address"),
+    city: Yup.string().required("Please enter your city"),
+    postalCode: Yup.string().required("Please enter your postal code"),
+    country: Yup.string().required("Please enter your country"),
+});

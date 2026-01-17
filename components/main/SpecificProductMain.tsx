@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, toggleWishlist } from "@/app/features/cartSlice";
 import { toast } from "react-toastify";
 import { RootState } from "@/app/store";
+import FavouriteButton from "@/components/ui/favouriteButton";
 const SpecificProductMain = () => {
     const params = useParams();
     const productId = params.id as string;
@@ -84,7 +85,7 @@ const SpecificProductMain = () => {
 
     if (error || !product) {
         return (
-            <Container className="py-8 !max-w-[90rem]">
+            <Container className="py-8 !container-md">
                 <div className="flex justify-center items-center h-64">
                     <div className="text-center">
                         <p className="text-red-500 text-lg">
@@ -111,7 +112,7 @@ const SpecificProductMain = () => {
     }
 
     return (
-        <Container className="py-8 !max-w-[80rem]">
+        <Container className="py-8 max-w-7xl!">
             {/* Breadcrumb */}
             <div className="mb-6">
                 <Link href="/products">
@@ -238,15 +239,7 @@ const SpecificProductMain = () => {
                                     +
                                 </Button>
                             </div>
-
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleToggleWishlist(product)}
-                                className="h-10 w-10 border"
-                            >
-                                <Heart className="h-5 w-5" />
-                            </Button>
+                            <FavouriteButton product={product} />
                         </div>
 
                         {/* <Button

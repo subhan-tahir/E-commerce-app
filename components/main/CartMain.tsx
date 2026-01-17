@@ -1,83 +1,3 @@
-// "use client"
-
-// import { RootState } from "@/app/store";
-// import ProductCardSkeleton from "@/components/ui/product-card-skeleton";
-
-// import { CartItem } from "@/types";
-// import { Trash } from "lucide-react";
-// import Image from "next/image";
-// import { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux"
-// import Container from "@/components/container";
-// import { removeCart } from "@/app/features/cartSlice";
-
-// import { toast } from "react-toastify";
-// import EmptyCard from "@/components/empty-card";
-// const CartMain = () => {
-//     const [carts, setCart] = useState<CartItem[]>([]);
-//     const [loading, setLoading] = useState(true);
-//     const cartItems = useSelector((state: RootState) => state.cart.items);
-//     const dispatch = useDispatch();
-//     useEffect(() => {
-//         setLoading(true);
-//         const timeout = setTimeout(() => {
-//             setCart(cartItems);
-//             setLoading(false);
-//         }, 1000); // simulate loading delay
-//         return () => clearTimeout(timeout);
-//     }, [cartItems]);
-
-//     //cart is empty
-
-//     const handleRemoveFromCart = (productId: number) => {
-//         dispatch(removeCart(productId as number));
-//         toast.success(`Removed from cart!`);
-//     }
-//     if (loading) {
-//         return (
-//             <Container className="space-y-16 pb-16 max-w-[80rem]">
-//                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-//                     {[...Array(2)].map((_, i) => (
-//                         <ProductCardSkeleton key={i} />
-//                     ))}
-//                 </div>
-//             </Container>
-
-//         )
-//     }
-
-
-//     return (
-//         <>
-//             {
-//                 carts.length === 0 ? (
-//                     <EmptyCard title="Your cart is empty" description="You have no items in your cart. Start shopping to add items to your cart." btnText="Start Shopping" />
-//                 ) : (
-
-//                     <Container className="space-y-16 pb-16 max-w-[80rem]">
-//                         <div className="p-8">
-//                             <h2 className="text-2xl font-semibold mb-4 text-center">{carts.length === 0 ? "" : "Your Cart Items"}</h2>
-//                             {carts.map((item) => (
-//                                 <div key={item.id} className="border p-4 mb-2 rounded-md shadow-sm">
-//                                     <div className="relative">
-//                                         <Image src={item.image} alt={item.title} width={200} height={200} />
-//                                     </div>
-//                                     <p className="font-medium">{item.title}</p>
-//                                     <p>Price: ${item.price}</p>
-//                                     <p>Quantity: {item.quantity}</p>
-//                                     <button onClick={() => handleRemoveFromCart(item.id)} className="bg-destructive hover:bg-destructive/80 cursor-pointer text-white px-4 py-2 rounded-md mt-2 flex items-center text-sm">Remove Cart Item <span className="ml-2 text-sm"><Trash size={16} /></span></button>
-//                                 </div>
-//                             ))}
-//                         </div>
-//                     </Container>
-//                 )
-//             }
-//         </>
-//     )
-// }
-
-// export default CartMain
-
 "use client";
 
 import { RootState } from "@/app/store";
@@ -93,6 +13,8 @@ import ProductCardSkeleton from "@/components/ui/product-card-skeleton";
 import EmptyCard from "@/components/empty-card";
 import { decreaseQuantity, increaseQuantity, removeCart } from "@/app/features/cartSlice";
 import { Button } from "../ui/button";
+import { routes } from "@/app/lib/routes";
+import Link from "next/link";
 
 export default function CartMain() {
   const [loading, setLoading] = useState(true);
@@ -116,7 +38,7 @@ export default function CartMain() {
 
   if (loading) {
     return (
-      <Container className="max-w-[80rem] py-16">
+      <Container className="max-w-7xl py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <ProductCardSkeleton key={i} />
@@ -151,9 +73,9 @@ export default function CartMain() {
               <Image
                 src={item.image}
                 alt={item.title}
-                width={120}
-                height={120}
-                className="rounded-md object-cover"
+                width={150}
+                height={150}
+                className="rounded-md object-contain"
               />
 
               <div className="flex-1">
@@ -165,11 +87,11 @@ export default function CartMain() {
                 {/* Quantity Controls */}
                 <div className="flex items-center gap-3 mt-3">
                   <button
-                    
+
                     onClick={() => dispatch(decreaseQuantity(item.id))}
                     disabled={item.quantity === 1}
-                
-                    className={`p-1 cursor-pointer border rounded-md hover:bg-gray-100 ${item.quantity === 1 ? "disabled:opacity-50 disabled:cursor-not-allowed":""}`}
+
+                    className={`p-1 cursor-pointer border rounded-md hover:bg-gray-100 ${item.quantity === 1 ? "disabled:opacity-50 disabled:cursor-not-allowed" : ""}`}
                   >
                     <Minus size={16} />
                   </button>
@@ -217,9 +139,12 @@ export default function CartMain() {
             <p>${(subtotal + 5).toFixed(2)}</p>
           </div>
 
-          <button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-lg">
+          {/* <button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-lg">
             Checkout
-          </button>
+          </button> */}
+          <Link href={routes.checkout}>
+            <Button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 rounded-lg">Checkout</Button>
+          </Link>
         </div>
       </div>
     </Container>
