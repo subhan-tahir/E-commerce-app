@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ShoppingCart, User,  Heart, LogOut } from 'lucide-react';
+import { ShoppingCart, User, Heart, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { routes } from '@/app/lib/routes';
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
@@ -20,30 +20,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+
   const pathname = usePathname();
   const { data: session, status } = useSession();
-
-  //select item from slice
-  // const items = useSelector((state: RootState) => state.cart.items);
   const cartItems = useSelector((state: RootState) => state.cart.items) || [];
   const wishlistItems = useSelector((state: RootState) => state.cart.wishlistItems) || [];
-
   const cartQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const wishlistQuantity = wishlistItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  const { scrollY } = useScroll();
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest as number > 50) {
-      setScrolled(true);
-    } else {
-      setScrolled(false);
-    }
-  });
-
-
- 
 
   const navItems = [
     {
@@ -54,7 +38,7 @@ const Navbar = () => {
       label: 'Products',
       href: routes.products,
     },
-  
+
     {
       label: 'About',
       href: routes.about,
@@ -81,14 +65,11 @@ const Navbar = () => {
   }
   return (
     <motion.header
-      initial={{ opacity: 0, y: -100 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -100 }}
-
-      whileInView={{ opacity: 1, y: 0 }}
+   
       transition={{ duration: 0.5, ease: "easeInOut" }}
 
-      className={`bg-white shadow-sm border-b sticky  z-50 md:w-[85%] w-[90%] mx-auto my-4 transition-all duration-300 rounded-lg ${scrolled ? ' bg-white/90 backdrop-blur shadow-md top-5' : "bg-transparent top-0"}`}>
+      className={`border sticky md:top-5 top-0 z-50 backdrop-blur bg-white md:w-[85%] w-full mx-auto md:my-4 transition-all duration-300 md:rounded-lg`}>
+
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -108,26 +89,14 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Search Bar */}
-          {/* <div className="hidden md:flex flex-1 max-w-md mx-8">
-            <form onSubmit={handleSearch} className="w-full">
-              <div className="relative">
-                <Input
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
-                  value={searchQuery}
-                  type="text" placeholder="Search..." className="w-full rounded-full bg-gray-100 px-4 py-2 pl-10 focus:outline-none focus:bg-white" />
 
-                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-              </div>
-            </form>
-          </div> */}
-          <div className="hidden md:flex max-w-md justify-end gap-4 items-center">
+          <div className="flex max-w-md justify-end gap-4 items-center">
 
             {/* Right Side Icons */}
             <div className="flex items-center space-x-4">
               {/* Wishlist */}
               <Link href={routes.wishlist}>
-                <button className="p-2 text-gray-700 hover:text-secondary cursor-pointer transition-colors relative">
+                <button className="md:p-2 p-1 text-gray-700 hover:text-secondary cursor-pointer transition-colors relative">
                   <Heart className="h-6 w-6" />
                   <span className="absolute -top-1 -right-1 bg-secondary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {wishlistQuantity}
@@ -137,7 +106,7 @@ const Navbar = () => {
 
               {/* Cart */}
               <Link href={routes.cart}>
-                <button className="p-2 text-gray-700 hover:text-secondary cursor-pointer transition-colors relative">
+                <button className="md:p-2 p-1 text-gray-700 hover:text-secondary cursor-pointer transition-colors relative">
                   <ShoppingCart className="h-6 w-6" />
                   <span className="absolute -top-1 -right-1 bg-secondary  text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {cartQuantity}
@@ -145,81 +114,85 @@ const Navbar = () => {
                 </button>
               </Link>
             </div>
-       
-            {
-              status === 'loading' ? (
-                <Skeleton className="h-8 w-8 rounded-full bg-gray-200" />
-              ) : status === 'authenticated' ? (
-                <div className="relative">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="relative border-0 p-0 w-8 h-8 cursor-pointer hover:bg-transparent focus-visible:ring-0" >
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={(session?.user?.profileImage || session?.user?.profileImage) ?? undefined} alt="User Avatar" />
-                          <AvatarFallback>{session?.user?.username?.charAt(0) || 'U'}</AvatarFallback>
-                        </Avatar>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-62">
-                      <DropdownMenuItem>
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage src={(session?.user?.profileImage || session?.user?.profileImage) ?? undefined} alt="User Avatar" />
-                          <AvatarFallback>{session?.user?.username?.charAt(0) || 'U'}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col space-y-1">
-                          <span className="text-sm font-medium">{session?.user?.username || 'User'}</span>
-                          <span className="text-xs text-gray-500">{session?.user?.email || 'User Email'}</span>
-                        </div>
-                      </DropdownMenuItem>
 
-                      <DropdownMenuItem>
-                        <Link href={routes.profile} className="w-full flex items-center gap-2">
-                          <User className="h-4 w-4" />
-                          Profile
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Link href={routes.login} className="w-full flex items-center gap-2" onClick={handleLogout}>
-                          <LogOut className="h-4 w-4" />
-                          Logout
-                        </Link>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+            <div className='hidden md:flex items-center'>
 
-              ) : (
-                
-                <div className="hidden md:flex items-center space-x-4">
-                  <Link href={routes.login} className=" hover:text-scondary hover:bg-secondary transition-colors bg-primary text-white px-6 py-2 rounded-full">
-                    Login
-                  </Link>
-                  <Link href={routes.register} className=" transition-colors hover:bg-secondary  hover:text-white border-primary border-2 px-6 py-2 rounded-full min-h-[26px]">
-                    Register
-                  </Link>
-                </div>
-              )
-            }
+              {
+                status === 'loading' ? (
+                  <Skeleton className="h-8 w-8 rounded-full bg-gray-200" />
+                ) : status === 'authenticated' ? (
+                  <div className="relative">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="relative border-0 p-0 w-8 h-8 cursor-pointer hover:bg-transparent focus-visible:ring-0" >
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={(session?.user?.profileImage || session?.user?.profileImage) ?? undefined} alt="User Avatar" />
+                            <AvatarFallback>{session?.user?.username?.charAt(0) || 'U'}</AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-62">
+                        <DropdownMenuItem>
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage src={(session?.user?.profileImage || session?.user?.profileImage) ?? undefined} alt="User Avatar" />
+                            <AvatarFallback>{session?.user?.username?.charAt(0) || 'U'}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col space-y-1">
+                            <span className="text-sm font-medium">{session?.user?.username || 'User'}</span>
+                            <span className="text-xs text-gray-500">{session?.user?.email || 'User Email'}</span>
+                          </div>
+                        </DropdownMenuItem>
 
-          </div>
+                        <DropdownMenuItem>
+                          <Link href={routes.profile} className="w-full flex items-center gap-2">
+                            <User className="h-4 w-4" />
+                            Profile
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link href={routes.login} className="w-full flex items-center gap-2" onClick={handleLogout}>
+                            <LogOut className="h-4 w-4" />
+                            Logout
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                ) : (
+
+                  <div className="hidden md:flex items-center space-x-4">
+                    <Link href={routes.login} className=" hover:text-scondary hover:bg-secondary transition-colors bg-primary text-white px-6 py-2 rounded-full">
+                      Login
+                    </Link>
+                    <Link href={routes.register} className=" transition-colors hover:bg-secondary  hover:text-white border-primary border-2 px-6 py-2 rounded-full min-h-[26px]">
+                      Register
+                    </Link>
+                  </div>
+                )
+              }
+            </div>
+
           <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="relative w-8 h-8 !flex items-center justify-center md:!hidden group cursor-pointer"
-                aria-label="Toggle Menu"
-              >
-                <span
-                  className={`absolute w-6 h-0.5 bg-gray-800 transition-transform duration-300 ${isMenuOpen ? 'rotate-45 top-1/2' : 'top-2'
-                    }`}
-                />
-                <span
-                  className={`absolute w-6 h-0.5 bg-gray-800 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : 'top-1/2'
-                    }`}
-                />
-                <span
-                  className={`absolute w-6 h-0.5 bg-gray-800 transition-transform duration-300 ${isMenuOpen ? '-rotate-45 top-1/2' : 'bottom-2'
-                    }`}
-                />
-              </button>
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="relative w-8 h-8 flex! items-center justify-center md:hidden! group cursor-pointer"
+            aria-label="Toggle Menu"
+          >
+            <span
+              className={`absolute w-6 h-0.5 bg-gray-800 transition-transform duration-300 ${isMenuOpen ? 'rotate-45 top-1/2' : 'top-2'
+                }`}
+            />
+            <span
+              className={`absolute w-6 h-0.5 bg-gray-800 transition-opacity duration-300 ${isMenuOpen ? 'opacity-0' : 'top-1/2'
+                }`}
+            />
+            <span
+              className={`absolute w-6 h-0.5 bg-gray-800 transition-transform duration-300 ${isMenuOpen ? '-rotate-45 top-1/2' : 'bottom-2'
+                }`}
+            />
+          </button>
+          </div>
+          
         </div>
 
         {/* Mobile Search */}

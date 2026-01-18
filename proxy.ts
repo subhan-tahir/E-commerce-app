@@ -4,7 +4,7 @@ import { getToken } from 'next-auth/jwt';
 const PUBLIC_PATHS = ['/', '/auth/login', '/auth/register', '/auth/forget-password', '/auth/reset-password'];
 const PRIVATE_PATHS = ['/cart', '/wishlist', '/profile'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const isPublic = PUBLIC_PATHS.includes(pathname);
   const isPrivate = PRIVATE_PATHS.includes(pathname);
